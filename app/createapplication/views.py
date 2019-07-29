@@ -1,3 +1,5 @@
 from django.shortcuts import render
+from .models import Application
 
-# Create your views here.
+def index(request):
+    return render(request, 'createapplication/index.html', { "applications" : Application.objects.order_by('date') })
