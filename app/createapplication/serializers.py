@@ -6,7 +6,7 @@ class ApplicationSerializer(serializers.Serializer):
     name = serializers.CharField(required=True, max_length=200)
     date = serializers.DateTimeField(read_only=True)
     destination = serializers.CharField(max_length=200)
-    goods = serializers.StringRelatedField(many=True)
+    goods = serializers.StringRelatedField(many=True, required=False)
 
     def create(self, validated_data):
         return Application.objects.create(**validated_data)

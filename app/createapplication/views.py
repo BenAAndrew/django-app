@@ -1,9 +1,11 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from .models import Application
 from datetime import datetime
+from .serializers import ApplicationSerializer
 
 def index(request):
     return render(request, 'createapplication/index.html', { "applications" : Application.objects.order_by('date') })
@@ -20,5 +22,20 @@ def add(request):
     return HttpResponse(app)
 
 def application(request, application_id):
-    app = Application.objects.filter(id=application_id).values()
-    return Response({'application': app}, 200)
+    try:
+        application = Application.objects(pk=application_id)
+    except Application.DoesNotExit:
+        return HttpResponse(status=404)
+
+def application(request):
+    if request.method == 'GET':
+        applications = Application.objects.all()
+        serializer = ApplicationSerializer(applications, many=True)
+        return JsonResponse(serializer.data, safe=False, status=200)
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = ApplicationSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)

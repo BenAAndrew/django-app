@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 class Good(models.Model):
     name = models.CharField(max_length=200)
@@ -7,7 +8,7 @@ class Good(models.Model):
 
 class Application(models.Model):
     name = models.CharField(max_length=200)
-    date = models.DateTimeField()
+    date = models.DateTimeField(default=now)
     destination = models.CharField(max_length=200)
     goods = models.ManyToManyField(Good)
     def __str__(self):
