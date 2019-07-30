@@ -15,6 +15,11 @@ def getApplication(id):
     r = requests.get('http://127.0.0.1:8001/application/'+str(id)+"/")
     return json.loads(r.content.decode('utf-8'))
 
+def getGood(id):
+    print('http://127.0.0.1:8001/application/good/'+str(id)+"/")
+    r = requests.get('http://127.0.0.1:8001/application/good/'+str(id)+"/")
+    return json.loads(r.content.decode('utf-8'))
+
 def index(request):
     return render(request, 'createapplication/index.html', { "applications" : getApplications() })
 
@@ -29,12 +34,21 @@ def createGood(request):
         return render(request, 'createapplication/applicationRedirect.html')
 
 def editApplication(request, application_id):
-    print(request.method)
     if request.method == "GET":
         return render(request, 'createapplication/editApplication.html', { "application" : getApplication(application_id) })
     if request.method == "POST":
         r = requests.delete('http://127.0.0.1:8001/application/'+str(application_id)+"/")
         return render(request, 'createapplication/applicationRedirect.html')
+
+def editGood(request, good_id):
+    if request.method == "GET":
+        return render(request, 'createapplication/editGood.html', { "good": getGood(good_id) })
+    if request.method == "POST":
+        r = requests.delete('http://127.0.0.1:8001/application/good/'+str(good_id)+"/")
+        return render(request, 'createapplication/applicationRedirect.html')
+
+def viewGoods(request):
+    return render(request, 'createapplication/viewGoods.html', { "goods" : getGoods() })
 
 def createApplication(request):
     if request.method == "GET":
