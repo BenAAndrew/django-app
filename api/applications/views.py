@@ -31,7 +31,15 @@ def bodyToJson(body):
     values = dict()
     for element in elements:
         data = element.split("=")
-        values[data[0]] = data[1]
+        if data[0] in values:
+            if not isinstance(values[data[0]], list):
+                copy = values[data[0]]
+                values[data[0]] = list()
+                values[data[0]].append(copy)
+            values[data[0]].append(data[1])
+        else:
+            values[data[0]] = data[1]
+    print("VALUES: "+str(values))
     return values
 
 def application_list(request):
@@ -53,7 +61,7 @@ def good_list(request):
         serializer = GoodSerializer(goods, many=True)
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
+        data = bodyToJson(request.body.decode('utf-8'))
         serializer = GoodSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
