@@ -1,0 +1,6 @@
+#!/bin/bash
+exec api/manage.py migrate &
+exec api/manage.py runserver 0.0.0.0:8001 &
+exec app/manage.py migrate &
+exec app/manage.py runserver 0.0.0.0:8000
+
