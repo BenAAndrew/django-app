@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from rest_framework.response import Response
+
 from .models import Application
 from datetime import datetime
 
@@ -16,3 +18,7 @@ def add(request):
     app = Application(name=request.POST['name'], date=datetime.now(), destination=request.POST['destination'])
     app.save()
     return HttpResponse(app)
+
+def application(request, application_id):
+    app = Application.objects.filter(id=application_id).values()
+    return Response({'application': app}, 200)
