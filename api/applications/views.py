@@ -25,14 +25,23 @@ def application_detail(request, application_id):
         application.delete()
         return HttpResponse(status=204)
 
+def bodyToJson(body):
+    print("RECIEVED "+body)
+    elements = body.split("&")
+    values = dict()
+    for element in elements:
+        data = element.split("=")
+        values[data[0]] = data[1]
+    return values
+
 def application_list(request):
     if request.method == 'GET':
         applications = Application.objects.all()
         serializer = ApplicationSerializer(applications, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
     if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ApplicationSerializer(data=data)
+        values = bodyToJson(request.body.decode('utf-8'))
+        serializer = ApplicationSerializer(data=values)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
