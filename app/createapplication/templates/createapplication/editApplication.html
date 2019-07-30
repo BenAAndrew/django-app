@@ -10,28 +10,23 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="/application/">Home</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="/application/create">Create Application</a>
-      </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/application/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/application/create">Create Application</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="/application/creategood">Create Good</a>
         </li>
     </ul>
   </div>
 </nav>
-<form action="/application/create" method="post" >
-    {% csrf_token %}
-    <input name="name" required><br><br>
-    <input name="destination" required><br><br>
-    <select name="goods" multiple required>
-        {% for good in goods %}
-            <option value="{{ good.id }}">{{ good.name }}</option>
-        {% endfor %}
-    </select><br><br>
-    <input type="submit">
+<h1>{{ application.name }}</h1>
+<h4>{{ application.date }}</h4>
+<h4>{{ application.destination }}</h4>
+<form action="/application/editapplication/{{ application.id }}/" method="POST">
+    <input type="submit" class="like" value="Delete">
 </form>
 </body>
 </html>
