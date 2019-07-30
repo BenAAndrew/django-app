@@ -2,11 +2,7 @@ import requests
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 import json
-
-from .serializers import ApplicationSerializer
-from .models import Application
 
 def getApplications():
     r = requests.get('http://127.0.0.1:8001/application/')
