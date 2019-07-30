@@ -19,8 +19,8 @@
     </ul>
   </div>
 </nav>
-<form action="/application/add" method="post">
-{% csrf_token %}
+<form action="/application/create" method="post">
+    {% csrf_token %}
     <input name="name" required><br><br>
     <input name="destination" required><br><br>
     <input type="submit">
