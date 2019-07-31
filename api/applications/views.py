@@ -26,7 +26,6 @@ def application_detail(request, application_id):
         return HttpResponse(status=204)
 
 def bodyToJson(body):
-    print("RECIEVED "+body)
     elements = body.split("&")
     values = dict()
     for element in elements:
@@ -39,7 +38,6 @@ def bodyToJson(body):
             values[data[0]].append(data[1])
         else:
             values[data[0]] = data[1]
-    print("VALUES: "+str(values))
     return values
 
 def application_list(request):
@@ -49,9 +47,13 @@ def application_list(request):
         return JsonResponse(serializer.data, safe=False, status=200)
     elif request.method == 'POST':
         values = bodyToJson(request.body.decode('utf-8'))
+        goods = values.pop('goods', None)
         serializer = ApplicationSerializer(data=values)
         if serializer.is_valid():
             serializer.save()
+            application = Application.objects.all()[Application.objects.count() - 1]
+            for good in goods:
+                application.goods.add(Good.objects.get(id=good))
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
