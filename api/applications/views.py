@@ -35,7 +35,7 @@ def application_list(request):
         values = json.loads(request.body)
         goods = values.pop('goods', None)
         serializer = ApplicationSerializer(data=values)
-        if serializer.is_valid():
+        if serializer.is_valid() and goods:
             serializer.save()
             application = Application.objects.all()[Application.objects.count() - 1]
             for good in goods:
