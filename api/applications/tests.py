@@ -45,7 +45,7 @@ class ApplicationTests(TestCase):
         self.assertEquals(application["name"], APP_NAME)
         self.assertIsNotNone(application["date"])
         self.assertEquals(application["destination"], APP_DEST)
-        self.assertEquals(application["goods"][0], GOOD_NAME)
+        self.assertEquals(application["goods"][0], 1)
 
     def test_get_invalid_application_detial(self):
         response = self.c.get('/application/2/')
