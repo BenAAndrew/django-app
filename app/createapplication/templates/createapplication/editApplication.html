@@ -28,6 +28,11 @@
 <form action="/application/editapplication/{{ application.id }}/" method="POST">
     Name:<input name="name" value="{{ application.name }}"><br>
     Destination:<input name="destination" value="{{ application.destination }}"><br>
+    Goods: <select name="goods" multiple required>
+        {% for good in application.goods %}
+            <option value="{{ good.id }}">{{ good.name }}</option>
+        {% endfor %}
+    </select><br><br>
     <input type="submit">
 </form><br>
 <form action="/application/deleteapplication/{{ application.id }}/" method="POST">
