@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework.parsers import JSONParser
@@ -46,7 +48,11 @@ def application_list(request):
         serializer = ApplicationSerializer(applications, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
     elif request.method == 'POST':
-        values = bodyToJson(request.body.decode('utf-8'))
+        try:
+            values = json.loads(request.body)
+        except:
+            values = bodyToJson(request.body.decode('utf-8'))
+        print(values)
         goods = values.pop('goods', None)
         serializer = ApplicationSerializer(data=values)
         if serializer.is_valid():
