@@ -25,10 +25,7 @@
     </ul>
   </div>
 </nav>
-<form action="/application/editgood/{{ good.id }}/" method="POST">
-    Name:<input name="name" value="{{ good.name }}"><br>
-    <input type="submit">
-</form><br>
+<h1>{{ good.name }}</h1>
 <form action="/application/deletegood/{{ good.id }}/" method="POST">
     <input type="submit" class="like" value="Delete">
 </form>
