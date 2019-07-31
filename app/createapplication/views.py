@@ -3,6 +3,21 @@ from django.http import HttpResponse
 from django.shortcuts import render
 import json
 
+def bodyToJson(body):
+    elements = body.split("&")
+    values = dict()
+    for element in elements:
+        data = element.split("=")
+        if data[0] in values:
+            if not isinstance(values[data[0]], list):
+                copy = values[data[0]]
+                values[data[0]] = list()
+                values[data[0]].append(copy)
+            values[data[0]].append(data[1])
+        else:
+            values[data[0]] = data[1]
+    return values
+
 def getApplications():
     r = requests.get('http://127.0.0.1:8001/application/')
     return json.loads(r.content.decode('utf-8'))
@@ -30,7 +45,7 @@ def createGood(request):
     if request.method == "GET":
         return render(request, 'createapplication/createGood.html')
     elif request.method == "POST":
-        r = requests.post('http://127.0.0.1:8001/application/good/', data=request.body)
+        r = requests.post('http://127.0.0.1:8001/application/good/', json=bodyToJson(request.body.decode('utf-8')))
         return render(request, 'createapplication/applicationRedirect.html')
 
 def editApplication(request, application_id):
@@ -56,5 +71,5 @@ def createApplication(request):
     if request.method == "GET":
         return render(request, 'createapplication/createApplication.html', { "goods" : getGoods() })
     elif request.method == "POST":
-        r = requests.post('http://127.0.0.1:8001/application/', data=request.body)
+        r = requests.post('http://127.0.0.1:8001/application/', json=bodyToJson(request.body.decode('utf-8')))
         return render(request, 'createapplication/applicationRedirect.html')
