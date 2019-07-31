@@ -1,7 +1,6 @@
 import json
 
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
 from rest_framework.parsers import JSONParser
 
 from .models import Application, Good
@@ -17,7 +16,6 @@ def application_detail(request, application_id):
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'PUT':
         data = json.loads(request.body)
-        print(data)
         serializer = ApplicationSerializer(application, data=data)
         if serializer.is_valid():
             serializer.save()

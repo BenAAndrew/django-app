@@ -9,6 +9,8 @@ urlpatterns = [
     path('viewapplication/<int:application_id>/', views.viewApplication, name='viewApplication'),
     path('deleteapplication/<int:application_id>/', views.deleteApplication, name='deleteApplication'),
     path('goods/', views.viewGoods, name='goods'),
-    path('editgood/<int:good_id>/', views.editGood, name='editApplication'),
+    path('editgood/<int:good_id>/', views.editGood, name='editGood'),
+    path('viewgood/<int:good_id>/', views.viewGood, name='viewGood'),
+    path('deletegood/<int:good_id>/', views.deleteGood, name='deleteGood'),
     path('creategood', views.createGood, name='good')
 ]

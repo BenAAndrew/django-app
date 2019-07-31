@@ -64,12 +64,16 @@ def viewApplication(request, application_id):
     application = getApplication(application_id)
     return render(request, 'createapplication/viewApplication.html', { "application" : application })
 
+def viewGood(request, good_id):
+    return render(request, 'createapplication/viewGood.html', { "good": getGood(good_id) })
+
+def deleteGood(request, good_id):
+    r = requests.delete('http://127.0.0.1:8001/application/good/' + str(good_id) + "/")
+    return render(request, 'createapplication/applicationRedirect.html')
+
 def editGood(request, good_id):
     if request.method == "GET":
         return render(request, 'createapplication/editGood.html', { "good": getGood(good_id) })
-    if request.method == "POST":
-        r = requests.delete('http://127.0.0.1:8001/application/good/'+str(good_id)+"/")
-        return render(request, 'createapplication/applicationRedirect.html')
 
 def viewGoods(request):
     return render(request, 'createapplication/viewGoods.html', { "goods" : getGoods() })
