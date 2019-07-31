@@ -1,24 +1,19 @@
 import pytest
 import pytest_html
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
-from time import sleep
 
+#Fixture for Chrome
 @pytest.fixture(scope="class")
 def chrome_driver_init(request):
-    chromedriver = webdriver.chrome()
-    request.cls.driver = chromedriver
+    chrome_driver = webdriver.Chrome()
+    request.cls.driver = chrome_driver
     yield
-    chromedriver.close()
+    chrome_driver.close()
 
 @pytest.mark.usefixtures("chrome_driver_init")
-class basic_chrome_test:
+class Chrome:
     pass
-class test_url_chrome(basic_chrome_test):
-    def test_open_url(self):
+
+class TestClass(Chrome):
+    def test_one(self):
         self.driver.get("https://www.amazon.co.uk/")
-        print(self.driver.title)
-
-        sleep(5)
-
