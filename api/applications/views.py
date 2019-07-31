@@ -17,13 +17,14 @@ def application_detail(request, application_id):
     elif request.method == 'PUT':
         data = json.loads(request.body)
         goods = data.pop('goods', None)
+        if not goods:
+            return JsonResponse({"noGoodsIncluded": True }, status=400)
         serializer = ApplicationSerializer(application, data=data)
         if serializer.is_valid():
             serializer.save()
             application.goods.clear()
-            if goods:
-                for good in goods:
-                    application.goods.add(Good.objects.get(id=good))
+            for good in goods:
+                application.goods.add(Good.objects.get(id=good))
             return JsonResponse(serializer.data)
         return JsonResponse(serializer.errors, status=400)
     elif request.method == 'DELETE':
@@ -38,6 +39,8 @@ def application_list(request):
     elif request.method == 'POST':
         values = json.loads(request.body)
         goods = values.pop('goods', None)
+        if not goods:
+            return JsonResponse({"noGoodsIncluded": True }, status=400)
         serializer = ApplicationSerializer(data=values)
         if serializer.is_valid() and goods:
             serializer.save()
