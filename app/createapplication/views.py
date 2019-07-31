@@ -74,6 +74,9 @@ def deleteGood(request, good_id):
 def editGood(request, good_id):
     if request.method == "GET":
         return render(request, 'createapplication/editGood.html', { "good": getGood(good_id) })
+    elif request.method == "POST":
+        r = requests.put('http://127.0.0.1:8001/application/good/' + str(good_id) + "/", json=bodyToJson(request.body.decode('utf-8')))
+        return render(request, 'createapplication/applicationRedirect.html')
 
 def viewGoods(request):
     return render(request, 'createapplication/viewGoods.html', { "goods" : getGoods() })
