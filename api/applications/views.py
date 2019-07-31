@@ -16,9 +16,14 @@ def application_detail(request, application_id):
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'PUT':
         data = json.loads(request.body)
+        goods = data.pop('goods', None)
         serializer = ApplicationSerializer(application, data=data)
         if serializer.is_valid():
             serializer.save()
+            application.goods.clear()
+            if goods:
+                for good in goods:
+                    application.goods.add(Good.objects.get(id=good))
             return JsonResponse(serializer.data)
         return JsonResponse(serializer.errors, status=400)
     elif request.method == 'DELETE':
