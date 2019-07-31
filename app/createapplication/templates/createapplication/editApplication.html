@@ -31,5 +31,11 @@
 <form action="/application/editapplication/{{ application.id }}/" method="POST">
     <input type="submit" class="like" value="Delete">
 </form>
+<h2>Goods;</h2>
+<ul>
+{% for good in application.goods %}
+<li>{{ good }}</li>
+{% endfor %}
+</ul>
 </body>
 </html>

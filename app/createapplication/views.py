@@ -35,7 +35,9 @@ def createGood(request):
 
 def editApplication(request, application_id):
     if request.method == "GET":
-        return render(request, 'createapplication/editApplication.html', { "application" : getApplication(application_id) })
+        application = getApplication(application_id)
+        print(len(application['goods']))
+        return render(request, 'createapplication/editApplication.html', { "application" : application })
     if request.method == "POST":
         r = requests.delete('http://127.0.0.1:8001/application/'+str(application_id)+"/")
         return render(request, 'createapplication/applicationRedirect.html')
