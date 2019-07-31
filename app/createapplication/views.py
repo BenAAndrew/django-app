@@ -51,11 +51,18 @@ def createGood(request):
 def editApplication(request, application_id):
     if request.method == "GET":
         application = getApplication(application_id)
-        print(len(application['goods']))
         return render(request, 'createapplication/editApplication.html', { "application" : application })
-    if request.method == "POST":
-        r = requests.delete('http://127.0.0.1:8001/application/'+str(application_id)+"/")
+    elif request.method == "POST":
+        r = requests.put('http://127.0.0.1:8001/application/'+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
         return render(request, 'createapplication/applicationRedirect.html')
+
+def deleteApplication(request, application_id):
+    r = requests.delete('http://127.0.0.1:8001/application/' + str(application_id) + "/")
+    return render(request, 'createapplication/applicationRedirect.html')
+
+def viewApplication(request, application_id):
+    application = getApplication(application_id)
+    return render(request, 'createapplication/viewApplication.html', { "application" : application })
 
 def editGood(request, good_id):
     if request.method == "GET":
