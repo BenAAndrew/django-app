@@ -12,10 +12,8 @@ class ApplicationSerializer(serializers.Serializer):
         return Application.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.title)
-        instance.date = validated_data.get('date', instance.date)
+        instance.name = validated_data.get('name', instance.name)
         instance.destination = validated_data.get('destination', instance.destination)
-        instance.goods = validated_data.get('goods', instance.goods)
         instance.save()
         return instance
 
