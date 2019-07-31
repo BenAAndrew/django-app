@@ -35,7 +35,7 @@ def getGood(id):
     r = requests.get('http://127.0.0.1:8001/application/good/'+str(id)+"/")
     return json.loads(r.content.decode('utf-8'))
 
-def getGoods(ids):
+def getGoodsNames(ids):
     goods = list()
     for id in ids:
         goods.append({ "id": int(id), "name" : getGood(int(id))["name"]})
@@ -57,7 +57,7 @@ def createGood(request):
 def editApplication(request, application_id):
     if request.method == "GET":
         application = getApplication(application_id)
-        application["goods"] = getGoods(application["goods"])
+        application["goods"] = getGoods()
         return render(request, 'createapplication/editApplication.html', { "application" : application })
     elif request.method == "POST":
         r = requests.put('http://127.0.0.1:8001/application/'+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
@@ -69,7 +69,7 @@ def deleteApplication(request, application_id):
 
 def viewApplication(request, application_id):
     application = getApplication(application_id)
-    application["goods"] = getGoods(application["goods"])
+    application["goods"] = getGoodsNames(application["goods"])
     return render(request, 'createapplication/viewApplication.html', { "application" : application })
 
 def viewGood(request, good_id):
