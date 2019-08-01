@@ -25,12 +25,14 @@
     </ul>
   </div>
 </nav>
-<form action="/application/editgood/{{ good.id }}/" method="POST">
-    Name:<input name="name" value="{{ good.name }}"><br>
-    <input id="edit" type="submit">
-</form><br>
-<form action="/application/deletegood/{{ good.id }}/" method="POST">
-    <input id="delete" type="submit" class="like" value="Delete">
-</form>
+<div style="padding-left: 50px;">
+    <form action="/application/editgood/{{ good.id }}/" method="POST">
+        Name:<input name="name" value="{{ good.name }}"><br>
+        <input id="edit" type="submit">
+    </form><br>
+    <form action="/application/deletegood/{{ good.id }}/" method="POST">
+        <input id="delete" type="submit" class="like" value="Delete">
+    </form>
+</div>
 </body>
 </html>

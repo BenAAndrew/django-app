@@ -25,14 +25,16 @@
     </ul>
   </div>
 </nav>
-<h1 id="name">{{ application.name }}</h1>
-<h4 id="date">{{ application.date }}</h4>
-<h4 id="destination">{{ application.destination }}</h4>
-<h2 id="goods">Goods;</h2>
-<ul id="goods_list">
-{% for good in application.goods %}
-<li>{{ good.name }}</li>
-{% endfor %}
-</ul>
+<div style="padding-left: 50px;">
+  <h1 id="name">{{ application.name }}</h1>
+  <h4 id="date">{{ application.date }}</h4>
+  <h4 id="destination">{{ application.destination }}</h4>
+  <h2 id="goods">Goods;</h2>
+  <ul id="goods_list">
+  {% for good in application.goods %}
+  <li>{{ good.name }}</li>
+  {% endfor %}
+  </ul>
+</div>
 </body>
 </html>
