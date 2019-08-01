@@ -25,25 +25,27 @@
     </ul>
   </div>
 </nav>
-<form action="/application/editapplication/{{ application.id }}/" method="POST">
-    Name:<input name="name" value="{{ application.name }}"><br>
-    Destination:<input name="destination" value="{{ application.destination }}"><br>
-    <!--Goods: <select name="goods" multiple required>
+<div style="padding-left: 50px;">
+    <form action="/application/editapplication/{{ application.id }}/" method="POST">
+        Name:<input name="name" value="{{ application.name }}"><br>
+        Destination:<input name="destination" value="{{ application.destination }}"><br>
+        <!--Goods: <select name="goods" multiple required>
+            {% for good in application.goods %}
+                <option value="{{ good.id }}">{{ good.name }}</option>
+            {% endfor %}
+        </select><br><br>-->
         {% for good in application.goods %}
-            <option value="{{ good.id }}">{{ good.name }}</option>
+        {% if good.selected %}
+            <input type="checkbox" name="goods" value="{{good.id}}" checked>{{good.name}}<br>
+        {% else %}
+            <input type="checkbox" name="goods" value="{{good.id}}">{{good.name}}<br>
+        {% endif %}
         {% endfor %}
-    </select><br><br>-->
-    {% for good in application.goods %}
-    {% if good.selected %}
-        <input type="checkbox" name="goods" value="{{good.id}}" checked>{{good.name}}<br>
-    {% else %}
-        <input type="checkbox" name="goods" value="{{good.id}}">{{good.name}}<br>
-    {% endif %}
-    {% endfor %}
-    <input id="edit" type="submit">
-</form><br>
-<form action="/application/deleteapplication/{{ application.id }}/" method="POST">
-    <input id="delete" type="submit" class="like" value="Delete">
-</form>
+        <input id="edit" type="submit">
+    </form><br>
+    <form action="/application/deleteapplication/{{ application.id }}/" method="POST">
+        <input id="delete" type="submit" class="like" value="Delete">
+    </form>
+</div>
 </body>
 </html>
