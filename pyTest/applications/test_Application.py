@@ -42,7 +42,7 @@ class TestAddingData(Chrome):
         self.driver.switch_to.alert.accept()
         self.driver.get(url + id_to_link["viewGood"])
         goodNames = self.driver.find_elements_by_xpath("//div//h1")
-        assert testGood in [name.get_attribute('innerHTML') for name in goodNames]
+        assert testGood in [name.text for name in goodNames]
 
     def test_add_application(self):
         self.driver.get(url + id_to_link["createApplication"])
@@ -53,7 +53,7 @@ class TestAddingData(Chrome):
         self.driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         self.driver.switch_to.alert.accept()
         appNames = self.driver.find_elements_by_xpath("//div//h1")
-        assert testApp["name"] in [name.get_attribute('innerHTML') for name in appNames]
+        assert testApp["name"] in [name.text for name in appNames]
 
 
 class TestDeletingData(Chrome):
@@ -85,5 +85,24 @@ class TestEditingData(Chrome):
         self.driver.find_element_by_xpath("//form//select[@name='goods']//option[1]").click()
         self.driver.find_element_by_xpath("(//input[@type='submit'])[1]").click()
         self.driver.switch_to.alert.accept()
-        newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])//h1").get_attribute('innerHTML')
+        newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])//h1").text
         assert value == newCard
+
+
+class TestViewingData(Chrome):
+    def test_view_good(self):
+        self.driver.get(url + id_to_link["viewGood"])
+        goodName = self.driver.find_element_by_xpath("//div//h1").text
+        self.driver.find_element_by_xpath("//button[text()=\"View\"]").click()
+        assert self.driver.find_element_by_xpath("//h1").text == goodName
+        assert self.driver.find_element_by_xpath("//input").get_attribute('value') == "Delete"
+
+    def test_view_application(self):
+        self.driver.get(url + id_to_link["home"])
+        appName = self.driver.find_element_by_xpath("//div//h1").text
+        self.driver.find_element_by_xpath("//button[text()=\"View\"]").click()
+        assert self.driver.find_element_by_xpath("//h1").text == appName
+        assert self.driver.find_element_by_xpath("//input").get_attribute('value') == "Delete"
+        assert self.driver.find_element_by_xpath("//h2").text == "Goods;"
+        self.driver.find_element_by_xpath("//ul")
+        assert len(self.driver.find_elements_by_xpath("//h4")) == 2
