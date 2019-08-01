@@ -3,3 +3,4 @@ __pycache__/
 migrations/
 .DS_STORE
 db.sqlite3
+venv/
