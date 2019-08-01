@@ -74,10 +74,9 @@ class TestDeletingData(Chrome):
         self.driver.switch_to.alert.accept()
         assert len(self.driver.find_elements_by_xpath("//div//h1")) == totalApplications - 1
 
-
 class TestEditingData(Chrome):
     def test_edit_application(self):
-        value = "endToEnd"
+        value = "AWholeNewValue"
         self.driver.get(url+id_to_link["home"])
         self.driver.find_element_by_xpath("(//button[@type='button' and text()='Edit'])[last()]").click()
         self.driver.find_element_by_xpath("//form//input[@name='name']").clear()
