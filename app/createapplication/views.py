@@ -2,12 +2,19 @@ import requests
 from django.http import HttpResponse
 from django.shortcuts import render
 import json
+import html
+
+def decodeSpaces(value):
+    while "+" in value:
+        value = value.replace("+"," ")
+    return value
 
 def bodyToJson(body):
     elements = body.split("&")
     values = dict()
     for element in elements:
         data = element.split("=")
+        data[1] = decodeSpaces(html.unescape(data[1]))
         if data[0] in values:
             if not isinstance(values[data[0]], list):
                 copy = values[data[0]]
@@ -93,5 +100,6 @@ def createApplication(request):
     if request.method == "GET":
         return render(request, 'createapplication/createApplication.html', { "goods" : getGoods() })
     elif request.method == "POST":
+        print(bodyToJson(request.body.decode('utf-8')))
         r = requests.post('http://127.0.0.1:8001/application/', json=bodyToJson(request.body.decode('utf-8')))
         return render(request, 'createapplication/applicationRedirect.html')
