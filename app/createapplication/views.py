@@ -59,7 +59,8 @@ def createGood(request):
         return render(request, 'createapplication/createGood.html')
     elif request.method == "POST":
         r = requests.post('http://127.0.0.1:8001/application/good/', json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createapplication/applicationRedirect.html')
+        return render(request, 'createapplication/viewGoods.html',
+                      { "goods" : getGoods(), "message" : "Successfully created a good" })
 
 def editApplication(request, application_id):
     if request.method == "GET":
@@ -68,11 +69,13 @@ def editApplication(request, application_id):
         return render(request, 'createapplication/editApplication.html', { "application" : application })
     elif request.method == "POST":
         r = requests.put('http://127.0.0.1:8001/application/'+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createapplication/applicationRedirect.html')
+        return render(request, 'createapplication/index.html',
+                      { "applications" : getApplications(), "message" : "Successfully edited an application" })
 
 def deleteApplication(request, application_id):
     r = requests.delete('http://127.0.0.1:8001/application/' + str(application_id) + "/")
-    return render(request, 'createapplication/applicationRedirect.html')
+    return render(request, 'createapplication/index.html',
+                  { "applications" : getApplications(), "message" : "Successfully deleted an application" })
 
 def viewApplication(request, application_id):
     application = getApplication(application_id)
@@ -84,14 +87,16 @@ def viewGood(request, good_id):
 
 def deleteGood(request, good_id):
     r = requests.delete('http://127.0.0.1:8001/application/good/' + str(good_id) + "/")
-    return render(request, 'createapplication/applicationRedirect.html')
+    return render(request, 'createapplication/viewGoods.html',
+                  { "goods" : getGoods(), "message" : "Successfully deleted a good" })
 
 def editGood(request, good_id):
     if request.method == "GET":
         return render(request, 'createapplication/editGood.html', { "good": getGood(good_id) })
     elif request.method == "POST":
         r = requests.put('http://127.0.0.1:8001/application/good/' + str(good_id) + "/", json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createapplication/applicationRedirect.html')
+        return render(request, 'createapplication/viewGoods.html',
+                      { "goods" : getGoods(), "message" : "Successfully edited a good" })
 
 def viewGoods(request):
     return render(request, 'createapplication/viewGoods.html', { "goods" : getGoods() })
@@ -102,4 +107,5 @@ def createApplication(request):
     elif request.method == "POST":
         print(bodyToJson(request.body.decode('utf-8')))
         r = requests.post('http://127.0.0.1:8001/application/', json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createapplication/applicationRedirect.html')
+        return render(request, 'createapplication/index.html',
+                      { "applications" : getApplications(), "message" : "Successfully created an application" })
