@@ -79,25 +79,25 @@ class TestEditingData(Chrome):
     def test_edit_application(self):
         value = "AWholeNewValue"
         self.driver.get(url+id_to_link["home"])
-        self.driver.find_element_by_xpath("(//button[@type='button' and text()='Edit'])[last()]").click()
-        self.driver.find_element_by_xpath("//form//input[@name='name']").clear()
-        self.driver.find_element_by_xpath("//form//input[@name='name']").send_keys(value)
+        self.driver.find_elements_by_id("edit")[-1].click()
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys(value)
         self.driver.find_element_by_xpath("//form//select[@name='goods']//option[1]").click()
-        self.driver.find_element_by_xpath("(//input[@type='submit'])[1]").click()
+        self.driver.find_element_by_id("edit").click()
         self.driver.switch_to.alert.accept()
-        newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])[last()]//h1").text
+        newCard = self.driver.find_elements_by_id("app_name")[-1].text
         assert value == newCard
 
     def test_edit_good(self):
         value = "goodTest"
         self.driver.get(url+id_to_link['viewGood'])
-        self.driver.find_element_by_xpath("(//button[@type='button' and text()='Edit'])[last()]").click()
-        self.driver.find_element_by_xpath("//input[@name='name']").clear()
-        self.driver.find_element_by_xpath("//input[@name='name']").send_keys(value)
-        self.driver.find_element_by_xpath("(//input[@type='submit'])[1]").click()
+        self.driver.find_elements_by_id("edit")[-1].click()
+        self.driver.find_element_by_name("name").clear()
+        self.driver.find_element_by_name("name").send_keys(value)
+        self.driver.find_element_by_id("edit").click()
         self.driver.switch_to.alert.accept()
         self.driver.get(url+id_to_link['viewGood'])
-        newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])[last()]//h1").text
+        newCard = self.driver.find_elements_by_id("good_name")[-1].text
         assert value == newCard
 
 
