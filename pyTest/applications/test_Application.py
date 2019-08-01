@@ -36,3 +36,19 @@ class TestAddingData(Chrome):
         self.driver.get(url + "application/goods/")
         goodNames = self.driver.find_elements_by_xpath("//div//h1")
         assert testGood in [name.get_attribute('innerHTML') for name in goodNames]
+
+
+class TestEditingData(Chrome):
+    def test_edit_application(self):
+        value = "endToEnd"
+        self.driver.get(url+id_to_link["home"])
+        self.driver.find_element_by_xpath("(//button[@type='button' and text()='Edit'])[1]").click()
+        self.driver.find_element_by_xpath("//form//input[@name='name']").clear()
+        self.driver.find_element_by_xpath("//form//input[@name='name']").send_keys(value)
+        self.driver.find_element_by_xpath("//form//select[@name='goods']//option[1]").click()
+        self.driver.find_element_by_xpath("(//input[@type='submit'])[1]").click()
+        self.driver.switch_to.alert.accept()
+        newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])//h1").get_attribute('innerHTML')
+        sleep(3)
+        print(newCard)
+        assert value == newCard
