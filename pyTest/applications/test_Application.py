@@ -51,5 +51,6 @@ class TestAddingData(Chrome):
         select = Select(self.driver.find_element_by_name("goods"))
         select.select_by_visible_text(testGood)
         self.driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        self.driver.get(url + id_to_link["home"])
-        sleep(10)
+        self.driver.switch_to.alert.accept()
+        appNames = self.driver.find_elements_by_xpath("//div//h1")
+        assert testApp["name"] in [name.get_attribute('innerHTML') for name in appNames]
