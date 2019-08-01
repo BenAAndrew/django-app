@@ -84,7 +84,7 @@ class TestEditingData(Chrome):
         self.driver.find_element_by_xpath("//form//select[@name='goods']//option[1]").click()
         self.driver.find_element_by_xpath("(//input[@type='submit'])[1]").click()
         self.driver.switch_to.alert.accept()
-        newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])//h1").text
+        newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])[last()]//h1").text
         assert value == newCard
 
     def test_edit_good(self):
