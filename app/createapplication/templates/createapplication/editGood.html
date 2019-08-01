@@ -27,10 +27,10 @@
 </nav>
 <form action="/application/editgood/{{ good.id }}/" method="POST">
     Name:<input name="name" value="{{ good.name }}"><br>
-    <input type="submit">
+    <input id="edit" type="submit">
 </form><br>
 <form action="/application/deletegood/{{ good.id }}/" method="POST">
-    <input type="submit" class="like" value="Delete">
+    <input id="delete" type="submit" class="like" value="Delete">
 </form>
 </body>
 </html>

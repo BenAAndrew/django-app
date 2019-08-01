@@ -33,11 +33,11 @@
             <div class="col-md-4">
               <div class="card mb-4 box-shadow">
                 <div class="card-body">
-                  <h1 class="card-text">{{ good.name }}</h1>
+                  <h1 class="card-text" id="good_name">{{ good.name }}</h1>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                        <a href="/application/viewgood/{{ good.id }}/"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
-                        <a href="/application/editgood/{{ good.id }}"><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
+                        <a href="/application/viewgood/{{ good.id }}/"><button id="view" type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
+                        <a href="/application/editgood/{{ good.id }}"><button id="edit" type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
                     </div>
                   </div>
                 </div>
