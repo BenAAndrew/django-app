@@ -54,3 +54,22 @@ class TestAddingData(Chrome):
         self.driver.switch_to.alert.accept()
         appNames = self.driver.find_elements_by_xpath("//div//h1")
         assert testApp["name"] in [name.get_attribute('innerHTML') for name in appNames]
+
+
+class TestDeletingData(Chrome):
+    def test_delete_good(self):
+        self.driver.get(url + id_to_link["viewGood"])
+        totalGoods = len(self.driver.find_elements_by_xpath("//div//h1"))
+        self.driver.find_element_by_xpath("//button[text()=\"Edit\"]").click()
+        self.driver.find_element_by_xpath("//input[@value=\"Delete\"]").click()
+        self.driver.switch_to.alert.accept()
+        self.driver.get(url + id_to_link["viewGood"])
+        assert len(self.driver.find_elements_by_xpath("//div//h1")) == totalGoods - 1
+
+    def test_delete_application(self):
+        self.driver.get(url + id_to_link["home"])
+        totalApplications = len(self.driver.find_elements_by_xpath("//div//h1"))
+        self.driver.find_element_by_xpath("//button[text()=\"Edit\"]").click()
+        self.driver.find_element_by_xpath("//input[@value=\"Delete\"]").click()
+        self.driver.switch_to.alert.accept()
+        assert len(self.driver.find_elements_by_xpath("//div//h1")) == totalApplications - 1
