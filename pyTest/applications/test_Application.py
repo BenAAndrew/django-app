@@ -55,6 +55,26 @@ class TestAddingData(Chrome):
         appNames = self.driver.find_elements_by_xpath("//div//h1")
         assert testApp["name"] in [name.get_attribute('innerHTML') for name in appNames]
 
+
+class TestDeletingData(Chrome):
+    def test_delete_good(self):
+        self.driver.get(url + id_to_link["viewGood"])
+        totalGoods = len(self.driver.find_elements_by_xpath("//div//h1"))
+        self.driver.find_element_by_xpath("//button[text()=\"Edit\"]").click()
+        self.driver.find_element_by_xpath("//input[@value=\"Delete\"]").click()
+        self.driver.switch_to.alert.accept()
+        self.driver.get(url + id_to_link["viewGood"])
+        assert len(self.driver.find_elements_by_xpath("//div//h1")) == totalGoods - 1
+
+    def test_delete_application(self):
+        self.driver.get(url + id_to_link["home"])
+        totalApplications = len(self.driver.find_elements_by_xpath("//div//h1"))
+        self.driver.find_element_by_xpath("//button[text()=\"Edit\"]").click()
+        self.driver.find_element_by_xpath("//input[@value=\"Delete\"]").click()
+        self.driver.switch_to.alert.accept()
+        assert len(self.driver.find_elements_by_xpath("//div//h1")) == totalApplications - 1
+
+
 class TestEditingData(Chrome):
     def test_edit_application(self):
         value = "endToEnd"
@@ -65,5 +85,17 @@ class TestEditingData(Chrome):
         self.driver.find_element_by_xpath("//form//select[@name='goods']//option[1]").click()
         self.driver.find_element_by_xpath("(//input[@type='submit'])[1]").click()
         self.driver.switch_to.alert.accept()
+        newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])[last()]//h1").get_attribute('innerHTML')
+        assert value == newCard
+
+    def test_edit_good(self):
+        value = "goodTest"
+        self.driver.get(url+id_to_link['viewGood'])
+        self.driver.find_element_by_xpath("(//button[@type='button' and text()='Edit'])[last()]").click()
+        self.driver.find_element_by_xpath("//input[@name='name']").clear()
+        self.driver.find_element_by_xpath("//input[@name='name']").send_keys(value)
+        self.driver.find_element_by_xpath("(//input[@type='submit'])[1]").click()
+        self.driver.switch_to.alert.accept()
+        self.driver.get(url+id_to_link['viewGood'])
         newCard = self.driver.find_element_by_xpath("(//div[@class='card-body'])[last()]//h1").get_attribute('innerHTML')
         assert value == newCard
