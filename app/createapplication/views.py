@@ -33,6 +33,12 @@ def getGoods():
     r = requests.get('http://127.0.0.1:8001/application/good/')
     return json.loads(r.content.decode('utf-8'))
 
+def getGoodsSelected(ids):
+    allGoods = getGoods()
+    for i in range(0, len(allGoods)):
+        allGoods[i]["selected"] = allGoods[i]["id"] in ids
+    return allGoods
+
 def getApplication(id):
     r = requests.get('http://127.0.0.1:8001/application/'+str(id)+"/")
     return json.loads(r.content.decode('utf-8'))
@@ -51,9 +57,6 @@ def getGoodsNames(ids):
 def index(request):
     return render(request, 'createapplication/index.html', { "applications" : getApplications() })
 
-def detail(request, application_id):
-    return HttpResponse("You're looking at question %s." % application_id)
-
 def createGood(request):
     if request.method == "GET":
         return render(request, 'createapplication/createGood.html')
@@ -65,7 +68,7 @@ def createGood(request):
 def editApplication(request, application_id):
     if request.method == "GET":
         application = getApplication(application_id)
-        application["goods"] = getGoods()
+        application["goods"] = getGoodsSelected(application["goods"])
         return render(request, 'createapplication/editApplication.html', { "application" : application })
     elif request.method == "POST":
         r = requests.put('http://127.0.0.1:8001/application/'+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))

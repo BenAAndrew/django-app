@@ -28,11 +28,18 @@
 <form action="/application/editapplication/{{ application.id }}/" method="POST">
     Name:<input name="name" value="{{ application.name }}"><br>
     Destination:<input name="destination" value="{{ application.destination }}"><br>
-    Goods: <select name="goods" multiple required>
+    <!--Goods: <select name="goods" multiple required>
         {% for good in application.goods %}
             <option value="{{ good.id }}">{{ good.name }}</option>
         {% endfor %}
-    </select><br><br>
+    </select><br><br>-->
+    {% for good in application.goods %}
+    {% if good.selected %}
+        <input type="checkbox" name="goods" value="{{good.id}}" checked>{{good.name}}<br>
+    {% else %}
+        <input type="checkbox" name="goods" value="{{good.id}}">{{good.name}}<br>
+    {% endif %}
+    {% endfor %}
     <input id="edit" type="submit">
 </form><br>
 <form action="/application/deleteapplication/{{ application.id }}/" method="POST">
