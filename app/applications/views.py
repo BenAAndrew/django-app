@@ -32,6 +32,7 @@ def editApplication(request, application_id):
 
 
 def viewApplication(request, application_id):
+    print(getApplication(application_id))
     return render(request, 'viewApplication.html', { "application" : getApplication(application_id) })
 
 
