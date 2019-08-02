@@ -2,28 +2,28 @@ import requests
 from django.http import HttpResponse
 from django.shortcuts import render
 import json
-import html
+from urllib.parse import unquote
 
-def decodeSpaces(value):
+def decode(value):
     while "+" in value:
         value = value.replace("+"," ")
-    return value
+    return unquote(value)
 
 def bodyToJson(body):
     elements = body.split("&")
-    values = dict()
+    data = dict()
     for element in elements:
-        data = element.split("=")
-        data[1] = decodeSpaces(html.unescape(data[1]))
-        if data[0] in values:
-            if not isinstance(values[data[0]], list):
-                copy = values[data[0]]
-                values[data[0]] = list()
-                values[data[0]].append(copy)
-            values[data[0]].append(data[1])
+        items = element.split("=")
+        name = decode(items[0])
+        value = decode(items[1])
+        if "[]" in name:
+            name = name.replace("[]","")
+            if name not in data:
+                data[name] = list()
+            data[name].append(value)
         else:
-            values[data[0]] = data[1]
-    return values
+            data[name] = value
+    return data
 
 def getApplications():
     r = requests.get('http://127.0.0.1:8001/application/')
@@ -71,6 +71,7 @@ def editApplication(request, application_id):
         application["goods"] = getGoodsSelected(application["goods"])
         return render(request, 'createapplication/editApplication.html', { "application" : application })
     elif request.method == "POST":
+        print(bodyToJson(request.body.decode('utf-8')))
         r = requests.put('http://127.0.0.1:8001/application/'+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
         return render(request, 'createapplication/index.html',
                       { "applications" : getApplications(), "message" : "Successfully edited an application" })
