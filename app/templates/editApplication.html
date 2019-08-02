@@ -1,0 +1,54 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+  <a class="navbar-brand" href="#">Top navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+   <ul class="navbar-nav mr-auto">
+       <li class="nav-item active">
+        <a class="nav-link" id="home" href="/applications/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="createApplication" href="/applications/create/">Create Application</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="createGood" href="/goods/create/">Create Good</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="viewGood" href="/goods/">View Goods</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div style="padding: 50px;">
+      {% if message %}
+      <div class="alert red">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ message }}
+      </div>
+      {% endif %}
+    <form action="/applications/edit/{{ application.id }}/" method="POST">
+        Name:<input name="name" value="{{ application.name }}" required><br>
+        Destination:<input name="destination" value="{{ application.destination }}" required><br>
+        {% for good in application.goods %}
+        {% if good.selected %}
+            <input type="checkbox" name="goods[]" value="{{good.id}}" checked>{{good.name}}<br>
+        {% else %}
+            <input type="checkbox" name="goods[]" value="{{good.id}}">{{good.name}}<br>
+        {% endif %}
+        {% endfor %}
+        <input id="edit" type="submit">
+    </form><br>
+    <form action="/applications/delete/{{ application.id }}/" method="POST">
+        <input id="delete" type="submit" class="like" value="Delete">
+    </form>
+</div>
+</body>
+</html>

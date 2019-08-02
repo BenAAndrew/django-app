@@ -1,27 +1,8 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
-    .alert {
-      padding: 20px;
-      background-color: cadetblue; /* Red */
-      color: white;
-      margin-bottom: 15px;
-    }
-    .closebtn {
-      margin-left: 15px;
-      color: white;
-      font-weight: bold;
-      float: right;
-      font-size: 22px;
-      line-height: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .closebtn:hover {
-      color: black;
-    }
-    </style>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
@@ -31,42 +12,41 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" id="home" href="/application/">Home</a>
+       <li class="nav-item active">
+        <a class="nav-link" id="home" href="/applications/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="createApplication" href="/application/create/">Create Application</a>
+        <a class="nav-link" id="createApplication" href="/applications/create/">Create Application</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="createGood" href="/application/creategood/">Create Good</a>
+        <a class="nav-link" id="createGood" href="/goods/create/">Create Good</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="viewGood" href="/application/goods/">View Goods</a>
+        <a class="nav-link" id="viewGood" href="/goods/">View Goods</a>
       </li>
     </ul>
   </div>
 </nav>
 <main role="main" class="container">
   {% if message %}
-  <div class="alert">
+  <div class="alert blue">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
     {{ message }}
   </div>
   {% endif %}
-    <h1>Welcome to your applications</h1>
+    <h1>Welcome to your goods</h1>
         <div class="container">
           <div class="row">
-            {% for app in applications %}
+            {% for good in goods %}
             <div class="col-md-4">
               <div class="card mb-4 box-shadow">
                 <div class="card-body">
-                  <h1 class="card-text" id="app_name">{{ app.name|safe }}</h1>
+                  <h1 class="card-text" id="good_name">{{ good.name }}</h1>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                        <a href="/application/viewapplication/{{ app.id }}/"><button id="view" type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
-                        <a href="/application/editapplication/{{ app.id }}/"><button id="edit" type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
+                        <a href="/goods/view/{{ good.id }}/"><button id="view" type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
+                        <a href="/goods/edit/{{ good.id }}"><button id="edit" type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
                     </div>
-                    <small class="text-muted">{{ app.date|safe }}</small>
                   </div>
                 </div>
               </div>
