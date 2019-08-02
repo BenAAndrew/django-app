@@ -28,3 +28,9 @@ def bodyToJson(body):
 def jsonToDict(url):
     r = requests.get(url)
     return json.loads(r.content.decode('utf-8'))
+
+def handleErrorResponse(error):
+    message = ""
+    for key in error:
+        message += key + ": " + error[key][0]
+    return message

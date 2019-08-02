@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from .dataHandler import *
-
+from app.dataHandler import *
 
 def index(request):
     return render(request, 'viewGoods.html', { "goods" : getGoods() })
