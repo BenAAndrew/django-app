@@ -31,17 +31,17 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" id="home" href="/application/">Home</a>
+       <li class="nav-item active">
+        <a class="nav-link" id="home" href="/applications/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="createApplication" href="/application/create/">Create Application</a>
+        <a class="nav-link" id="createApplication" href="/applications/create/">Create Application</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="createGood" href="/application/creategood/">Create Good</a>
+        <a class="nav-link" id="createGood" href="/goods/create/">Create Good</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="viewGood" href="/application/goods/">View Goods</a>
+        <a class="nav-link" id="viewGood" href="/goods/">View Goods</a>
       </li>
     </ul>
   </div>
@@ -53,10 +53,13 @@
         {{ message }}
       </div>
     {% endif %}
-    <form action="/application/creategood/" method="post">
+    <form action="/applications/create/" method="post" >
         {% csrf_token %}
-        <h1>Name</h1>
         <input name="name" required><br><br>
+        <input name="destination" required><br><br>
+        {% for good in goods %}
+        <input type="checkbox" name="goods[]" value="{{good.id}}">{{good.name}}<br>
+        {% endfor %}
         <input id="submit" type="submit">
     </form>
 </div>

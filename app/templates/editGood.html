@@ -1,7 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
+     <style>
     .alert {
       padding: 20px;
       background-color: indianred; /* Red */
@@ -53,14 +53,12 @@
         {{ message }}
       </div>
     {% endif %}
-    <form action="/application/create/" method="post" >
-        {% csrf_token %}
-        <input name="name" required><br><br>
-        <input name="destination" required><br><br>
-        {% for good in goods %}
-        <input type="checkbox" name="goods[]" value="{{good.id}}">{{good.name}}<br>
-        {% endfor %}
-        <input id="submit" type="submit">
+    <form action="/applications/edit/{{ good.id }}/" method="POST">
+        Name:<input name="name" value="{{ good.name }}"><br>
+        <input id="edit" type="submit">
+    </form><br>
+    <form action="/applications/delete/{{ good.id }}/" method="POST">
+        <input id="delete" type="submit" class="like" value="Delete">
     </form>
 </div>
 </body>
