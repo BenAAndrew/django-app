@@ -99,12 +99,13 @@ class TestViewingData(Chrome):
 
 class TestDeletingData(Chrome):
     def test_delete_good(self):
-        self.driver.get(url + id_to_link["viewGood"])
-        totalGoods = len(self.driver.find_elements_by_id("good_name"))
-        self.driver.find_element_by_id("edit").click()
-        self.driver.find_element_by_id("delete").click()
-        self.driver.get(url + id_to_link["viewGood"])
-        assert len(self.driver.find_elements_by_id("good_name")) == totalGoods - 1
+        for i in range(0, len(testGoods)):
+            self.driver.get(url + id_to_link["viewGood"])
+            totalGoods = len(self.driver.find_elements_by_id("good_name"))
+            self.driver.find_element_by_id("edit").click()
+            self.driver.find_element_by_id("delete").click()
+            self.driver.get(url + id_to_link["viewGood"])
+            assert len(self.driver.find_elements_by_id("good_name")) == totalGoods - 1
 
     def test_delete_application(self):
         self.driver.get(url + id_to_link["home"])
