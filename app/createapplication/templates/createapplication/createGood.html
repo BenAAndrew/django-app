@@ -25,11 +25,13 @@
     </ul>
   </div>
 </nav>
-<form action="/application/creategood/" method="post">
-    {% csrf_token %}
-    <h1>Name</h1>
-    <input name="name" required><br><br>
-    <input id="submit" type="submit">
-</form>
+<div style="padding-left: 50px;">
+    <form action="/application/creategood/" method="post">
+        {% csrf_token %}
+        <h1>Name</h1>
+        <input name="name" required><br><br>
+        <input id="submit" type="submit">
+    </form>
+</div>
 </body>
 </html>
