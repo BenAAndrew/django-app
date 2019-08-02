@@ -1,5 +1,4 @@
 import requests
-from django.http import HttpResponse
 from django.shortcuts import render
 import json
 from urllib.parse import unquote
@@ -25,13 +24,15 @@ def bodyToJson(body):
             data[name] = value
     return data
 
-def getApplications():
-    r = requests.get('http://127.0.0.1:8001/application/')
+def jsonToDict(url):
+    r = requests.get(url)
     return json.loads(r.content.decode('utf-8'))
 
+def getApplications():
+    return jsonToDict('http://127.0.0.1:8001/application/')
+
 def getGoods():
-    r = requests.get('http://127.0.0.1:8001/application/good/')
-    return json.loads(r.content.decode('utf-8'))
+    return jsonToDict('http://127.0.0.1:8001/application/good/')
 
 def getGoodsSelected(ids):
     allGoods = getGoods()
@@ -39,14 +40,20 @@ def getGoodsSelected(ids):
         allGoods[i]["selected"] = allGoods[i]["id"] in ids
     return allGoods
 
+def handleErrorResponse(error):
+    message = ""
+    for key in error:
+        message += key + ": " + error[key][0]
+    return message
+
 def getApplication(id):
-    r = requests.get('http://127.0.0.1:8001/application/'+str(id)+"/")
-    return json.loads(r.content.decode('utf-8'))
+    application = jsonToDict('http://127.0.0.1:8001/application/'+str(id)+"/")
+    application["goods"] = getGoodsNames(application["goods"])
+    application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]])
+    return application
 
 def getGood(id):
-    print('http://127.0.0.1:8001/application/good/'+str(id)+"/")
-    r = requests.get('http://127.0.0.1:8001/application/good/'+str(id)+"/")
-    return json.loads(r.content.decode('utf-8'))
+    return jsonToDict('http://127.0.0.1:8001/application/good/'+str(id)+"/")
 
 def getGoodsNames(ids):
     goods = list()
@@ -62,19 +69,26 @@ def createGood(request):
         return render(request, 'createapplication/createGood.html')
     elif request.method == "POST":
         r = requests.post('http://127.0.0.1:8001/application/good/', json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createapplication/viewGoods.html',
-                      { "goods" : getGoods(), "message" : "Successfully created a good" })
+        if r.status_code == 400:
+            errorResponse = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            return render(request, 'createapplication/createGood.html', {"message": errorResponse})
+        else:
+            return render(request, 'createapplication/viewGoods.html',
+                          { "goods" : getGoods(), "message" : "Successfully created a good" })
 
 def editApplication(request, application_id):
     if request.method == "GET":
-        application = getApplication(application_id)
-        application["goods"] = getGoodsSelected(application["goods"])
-        return render(request, 'createapplication/editApplication.html', { "application" : application })
+        print(getApplication(application_id))
+        return render(request, 'createapplication/editApplication.html', { "application" : getApplication(application_id) })
     elif request.method == "POST":
-        print(bodyToJson(request.body.decode('utf-8')))
         r = requests.put('http://127.0.0.1:8001/application/'+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createapplication/index.html',
-                      { "applications" : getApplications(), "message" : "Successfully edited an application" })
+        if r.status_code == 400:
+            errorResponse = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            return render(request, 'createapplication/editApplication.html',
+                          { "application" : getApplication(application_id), "message": errorResponse })
+        else:
+            return render(request, 'createapplication/index.html',
+                          {"applications": getApplications(), "message": "Successfully edited an application"})
 
 def deleteApplication(request, application_id):
     r = requests.delete('http://127.0.0.1:8001/application/' + str(application_id) + "/")
@@ -82,9 +96,7 @@ def deleteApplication(request, application_id):
                   { "applications" : getApplications(), "message" : "Successfully deleted an application" })
 
 def viewApplication(request, application_id):
-    application = getApplication(application_id)
-    application["goods"] = getGoodsNames(application["goods"])
-    return render(request, 'createapplication/viewApplication.html', { "application" : application })
+    return render(request, 'createapplication/viewApplication.html', { "application" : getApplication(application_id) })
 
 def viewGood(request, good_id):
     return render(request, 'createapplication/viewGood.html', { "good": getGood(good_id) })
@@ -99,8 +111,13 @@ def editGood(request, good_id):
         return render(request, 'createapplication/editGood.html', { "good": getGood(good_id) })
     elif request.method == "POST":
         r = requests.put('http://127.0.0.1:8001/application/good/' + str(good_id) + "/", json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createapplication/viewGoods.html',
-                      { "goods" : getGoods(), "message" : "Successfully edited a good" })
+        if r.status_code == 400:
+            errorResponse = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            return render(request, 'createapplication/editGood.html',
+                          { "good": getGood(good_id), "message": errorResponse})
+        else:
+            return render(request, 'createapplication/viewGoods.html',
+                          { "goods" : getGoods(), "message" : "Successfully edited a good" })
 
 def viewGoods(request):
     return render(request, 'createapplication/viewGoods.html', { "goods" : getGoods() })
@@ -109,7 +126,11 @@ def createApplication(request):
     if request.method == "GET":
         return render(request, 'createapplication/createApplication.html', { "goods" : getGoods() })
     elif request.method == "POST":
-        print(bodyToJson(request.body.decode('utf-8')))
         r = requests.post('http://127.0.0.1:8001/application/', json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createapplication/index.html',
+        if r.status_code == 400:
+            errorResponse = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            return render(request, 'createapplication/createApplication.html',
+                          {"goods": getGoods() , "message" : errorResponse})
+        else:
+            return render(request, 'createapplication/index.html',
                       { "applications" : getApplications(), "message" : "Successfully created an application" })
