@@ -1,27 +1,8 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
-    .alert {
-      padding: 20px;
-      background-color: cadetblue; /* Red */
-      color: white;
-      margin-bottom: 15px;
-    }
-    .closebtn {
-      margin-left: 15px;
-      color: white;
-      font-weight: bold;
-      float: right;
-      font-size: 22px;
-      line-height: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .closebtn:hover {
-      color: black;
-    }
-    </style>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
@@ -48,7 +29,7 @@
 </nav>
 <main role="main" class="container">
   {% if message %}
-  <div class="alert">
+  <div class="alert blue">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
     {{ message }}
   </div>

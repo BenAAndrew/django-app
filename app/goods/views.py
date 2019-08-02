@@ -25,10 +25,10 @@ def editGood(request, good_id):
         r = requests.put(API_URL+"application/good/" + str(good_id) + "/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
             errorResponse = handleErrorResponse(json.loads(r.content.decode('utf-8')))
-            return render(request, 'createapplication/editGood.html',
+            return render(request, 'editGood.html',
                           { "good": getGood(good_id), "message": errorResponse})
         else:
-            return render(request, 'createapplication/viewGoods.html',
+            return render(request, 'viewGoods.html',
                           { "goods" : getGoods(), "message" : "Successfully edited a good" })
 
 
