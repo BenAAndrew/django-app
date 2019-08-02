@@ -22,7 +22,7 @@ class Chrome:
 url = "http://127.0.0.1:8000/"
 id_to_link = {"home" : "application/", "createApplication" : "application/create/",
               "createGood" : "application/creategood/", "viewGood" : "application/goods/"}
-testGood = "testGood"
+testGoods = ["testGood","testGoodTwo"]
 testApp = {"name" : "testApp", "destination" : "testLocation"}
 
 
@@ -36,43 +36,23 @@ class TestNavbar(Chrome):
 
 class TestAddingData(Chrome):
     def test_add_good(self):
-        self.driver.get(url+ id_to_link["createGood"])
-        self.driver.find_element_by_name("name").send_keys(testGood)
-        self.driver.find_element_by_id("submit").click()
-        self.driver.switch_to.alert.accept()
-        self.driver.get(url + id_to_link["viewGood"])
-        goodNames = self.driver.find_elements_by_id("good_name")
-        assert testGood in [name.text for name in goodNames]
+        for testGood in testGoods:
+            self.driver.get(url+ id_to_link["createGood"])
+            self.driver.find_element_by_name("name").send_keys(testGood)
+            self.driver.find_element_by_id("submit").click()
+            self.driver.get(url + id_to_link["viewGood"])
+            goodNames = self.driver.find_elements_by_id("good_name")
+            assert testGood in [name.text for name in goodNames]
 
     def test_add_application(self):
         self.driver.get(url + id_to_link["createApplication"])
         self.driver.find_element_by_name("name").send_keys(testApp["name"])
         self.driver.find_element_by_name("destination").send_keys(testApp["destination"])
-        select = Select(self.driver.find_element_by_name("goods"))
-        select.select_by_visible_text(testGood)
+        goods = self.driver.find_elements_by_name("goods[]")
+        goods[0].click()
         self.driver.find_element_by_id("submit").click()
-        self.driver.switch_to.alert.accept()
         appNames = self.driver.find_elements_by_id("app_name")
         assert testApp["name"] in [name.text for name in appNames]
-
-
-class TestDeletingData(Chrome):
-    def test_delete_good(self):
-        self.driver.get(url + id_to_link["viewGood"])
-        totalGoods = len(self.driver.find_elements_by_id("good_name"))
-        self.driver.find_element_by_id("edit").click()
-        self.driver.find_element_by_id("delete").click()
-        self.driver.switch_to.alert.accept()
-        self.driver.get(url + id_to_link["viewGood"])
-        assert len(self.driver.find_elements_by_id("good_name")) == totalGoods - 1
-
-    def test_delete_application(self):
-        self.driver.get(url + id_to_link["home"])
-        totalApplications = len(self.driver.find_elements_by_id("app_name"))
-        self.driver.find_element_by_id("edit").click()
-        self.driver.find_element_by_id("delete").click()
-        self.driver.switch_to.alert.accept()
-        assert len(self.driver.find_elements_by_id("app_name")) == totalApplications - 1
 
 
 class TestEditingData(Chrome):
@@ -82,9 +62,8 @@ class TestEditingData(Chrome):
         self.driver.find_elements_by_id("edit")[-1].click()
         self.driver.find_element_by_name("name").clear()
         self.driver.find_element_by_name("name").send_keys(value)
-        self.driver.find_element_by_xpath("//form//select[@name='goods']//option[1]").click()
+        self.driver.find_elements_by_name("goods[]")[1].click()
         self.driver.find_element_by_id("edit").click()
-        self.driver.switch_to.alert.accept()
         newCard = self.driver.find_elements_by_id("app_name")[-1].text
         assert value == newCard
 
@@ -95,7 +74,6 @@ class TestEditingData(Chrome):
         self.driver.find_element_by_name("name").clear()
         self.driver.find_element_by_name("name").send_keys(value)
         self.driver.find_element_by_id("edit").click()
-        self.driver.switch_to.alert.accept()
         self.driver.get(url+id_to_link['viewGood'])
         newCard = self.driver.find_elements_by_id("good_name")[-1].text
         assert value == newCard
@@ -107,15 +85,30 @@ class TestViewingData(Chrome):
         goodName = self.driver.find_element_by_id("good_name").text
         self.driver.find_element_by_id("view").click()
         assert self.driver.find_element_by_id("good_name").text == goodName
-        assert self.driver.find_element_by_id("delete").get_attribute('value') == "Delete"
 
     def test_view_application(self):
         self.driver.get(url + id_to_link["home"])
         appName = self.driver.find_element_by_id("app_name").text
         self.driver.find_element_by_id("view").click()
         assert self.driver.find_element_by_id("name").text == appName
-        assert self.driver.find_element_by_id("delete").get_attribute('value') == "Delete"
         assert self.driver.find_element_by_id("goods").text == "Goods;"
         assert self.driver.find_element_by_id("goods_list")
         assert self.driver.find_elements_by_id("date")
         assert self.driver.find_elements_by_id("destination")
+
+
+class TestDeletingData(Chrome):
+    def test_delete_good(self):
+        self.driver.get(url + id_to_link["viewGood"])
+        totalGoods = len(self.driver.find_elements_by_id("good_name"))
+        self.driver.find_element_by_id("edit").click()
+        self.driver.find_element_by_id("delete").click()
+        self.driver.get(url + id_to_link["viewGood"])
+        assert len(self.driver.find_elements_by_id("good_name")) == totalGoods - 1
+
+    def test_delete_application(self):
+        self.driver.get(url + id_to_link["home"])
+        totalApplications = len(self.driver.find_elements_by_id("app_name"))
+        self.driver.find_element_by_id("edit").click()
+        self.driver.find_element_by_id("delete").click()
+        assert len(self.driver.find_elements_by_id("app_name")) == totalApplications - 1
