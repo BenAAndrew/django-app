@@ -1,6 +1,27 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+    .alert {
+      padding: 20px;
+      background-color: indianred; /* Red */
+      color: white;
+      margin-bottom: 15px;
+    }
+    .closebtn {
+      margin-left: 15px;
+      color: white;
+      font-weight: bold;
+      float: right;
+      font-size: 22px;
+      line-height: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .closebtn:hover {
+      color: black;
+    }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
@@ -25,15 +46,16 @@
     </ul>
   </div>
 </nav>
-<div style="padding-left: 50px;">
+<div style="padding: 50px;">
+      {% if message %}
+      <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ message }}
+      </div>
+      {% endif %}
     <form action="/application/editapplication/{{ application.id }}/" method="POST">
-        Name:<input name="name" value="{{ application.name }}"><br>
-        Destination:<input name="destination" value="{{ application.destination }}"><br>
-        <!--Goods: <select name="goods" multiple required>
-            {% for good in application.goods %}
-                <option value="{{ good.id }}">{{ good.name }}</option>
-            {% endfor %}
-        </select><br><br>-->
+        Name:<input name="name" value="{{ application.name }}" required><br>
+        Destination:<input name="destination" value="{{ application.destination }}" required><br>
         {% for good in application.goods %}
         {% if good.selected %}
             <input type="checkbox" name="goods[]" value="{{good.id}}" checked>{{good.name}}<br>
