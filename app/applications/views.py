@@ -29,6 +29,9 @@ def editApplication(request, application_id):
             errorResponse = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return render(request, 'editApplication.html',
                           { "application" : getApplication(application_id), "message": errorResponse })
+        else:
+            return render(request, 'index.html',
+                      { "applications" : getApplications(), "message" : "Successfully edited an application" })
 
 
 def viewApplication(request, application_id):
@@ -40,3 +43,11 @@ def deleteApplication(request, application_id):
     r = requests.delete(API_URL+"application/" + str(application_id) + "/")
     return render(request, 'index.html',
                   { "applications" : getApplications(), "message" : "Successfully deleted an application" })
+
+
+def submitApplication(request, application_id):
+    print("SUBMIT")
+    r = requests.get(API_URL + "application/submit/" + str(application_id) + "/")
+    print(r.status_code)
+    return render(request, 'index.html',
+                  {"applications": getApplications(), "message": "Successfully submitted an application"})

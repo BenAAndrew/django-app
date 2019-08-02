@@ -69,3 +69,15 @@ def good_detail(request, good_id):
     elif request.method == 'DELETE':
         good.delete()
         return HttpResponse(status=204)
+
+
+def submit_application(request, application_id):
+    print("SUBMIT APP")
+    try:
+        application = Application.objects.get(pk=application_id)
+    except:
+        return HttpResponse(status=404)
+    if application.progress == 'draft':
+        application.progress = 'submitted'
+        application.save()
+        return HttpResponse(status=204)
