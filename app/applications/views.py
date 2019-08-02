@@ -46,8 +46,9 @@ def deleteApplication(request, application_id):
 
 
 def submitApplication(request, application_id):
-    print("SUBMIT")
     r = requests.get(API_URL + "application/submit/" + str(application_id) + "/")
-    print(r.status_code)
-    return render(request, 'index.html',
-                  {"applications": getApplications(), "message": "Successfully submitted an application"})
+    if r.status_code == 400:
+        return render(request, 'index.html', {"applications": getApplications()})
+    else:
+        return render(request, 'index.html',
+                      {"applications": getApplications(), "message": "Successfully submitted an application"})

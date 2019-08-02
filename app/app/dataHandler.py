@@ -14,7 +14,6 @@ def getApplications():
     for i in range(0, len(applications)):
         applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
         applications[i]["progress"] = applications[i]["progress"].capitalize()
-    print(applications)
     return applications
 
 def getGoods():
