@@ -36,7 +36,7 @@
             {% endfor %}
         </select><br><br>-->
         {% for good in goods %}
-        <input type="checkbox" name="goods" value="{{good.id}}">{{good.name}}<br>
+        <input type="checkbox" name="goods[]" value="{{good.id}}">{{good.name}}<br>
         {% endfor %}
         <input id="submit" type="submit">
     </form>

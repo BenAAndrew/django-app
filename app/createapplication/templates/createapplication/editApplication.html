@@ -36,9 +36,9 @@
         </select><br><br>-->
         {% for good in application.goods %}
         {% if good.selected %}
-            <input type="checkbox" name="goods" value="{{good.id}}" checked>{{good.name}}<br>
+            <input type="checkbox" name="goods[]" value="{{good.id}}" checked>{{good.name}}<br>
         {% else %}
-            <input type="checkbox" name="goods" value="{{good.id}}">{{good.name}}<br>
+            <input type="checkbox" name="goods[]" value="{{good.id}}">{{good.name}}<br>
         {% endif %}
         {% endfor %}
         <input id="edit" type="submit">
