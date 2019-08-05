@@ -1,7 +1,20 @@
 from .tools import *
 
+progress = ['draft', 'submitted', 'processing', 'approved']
+
+def progressToProgressPercent(application):
+    state = application["progress"]
+    if state == 'declined':
+        return 5
+    else:
+        return (progress.index(state)+1) * 25
+
 def getApplications():
-    return jsonToDict('http://127.0.0.1:8001/application/')
+    applications = jsonToDict('http://127.0.0.1:8001/application/')
+    for i in range(0, len(applications)):
+        applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
+        applications[i]["progress"] = applications[i]["progress"].capitalize()
+    return applications
 
 def getGoods():
     return jsonToDict('http://127.0.0.1:8001/application/good/')

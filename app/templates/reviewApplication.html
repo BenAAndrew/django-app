@@ -36,6 +36,11 @@
   <li>{{ good.name }}</li>
   {% endfor %}
   </ul>
+  <hr>
+  <div>
+    <a href="/admin/reject/{{ application.id }}/"><button id="reject">Reject</button></a>
+    <a href="/admin/accept/{{ application.id }}/"><button id="accept">Accept</button></a>
+  </div>
 </div>
 </body>
 </html>
