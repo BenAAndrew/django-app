@@ -1,5 +1,4 @@
 from django.core.validators import RegexValidator
-from enumchoicefield import EnumChoiceField
 from rest_framework import serializers
 from .models import Application, Good
 
