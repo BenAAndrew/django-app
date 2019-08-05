@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from time import sleep
 
 @pytest.fixture(scope="class")
 def chrome_driver_init(request):
