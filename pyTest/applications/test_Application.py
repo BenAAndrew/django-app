@@ -1,23 +1,4 @@
-import pytest
-import pytest_html
-from selenium import webdriver
-from time import sleep
-
-#Fixture for Chrome
-from selenium.webdriver.support.select import Select
-
-
-@pytest.fixture(scope="class")
-def chrome_driver_init(request):
-    chrome_driver = webdriver.Chrome()
-    request.cls.driver = chrome_driver
-    yield
-    chrome_driver.close()
-
-@pytest.mark.usefixtures("chrome_driver_init")
-class Chrome:
-    pass
-
+from chrome import *
 
 url = "http://127.0.0.1:8000/"
 id_to_link = {"home" : "application/", "createApplication" : "application/create/",
