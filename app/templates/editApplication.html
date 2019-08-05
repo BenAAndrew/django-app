@@ -45,10 +45,17 @@
         {% endif %}
         {% endfor %}
         <input id="edit" type="submit">
-    </form><br>
+    </form>
     <form action="/applications/delete/{{ application.id }}/" method="POST">
         <input id="delete" type="submit" class="like" value="Delete">
     </form>
+    <hr>
+    {% if application.progress == "declined" %}
+    <p><b>This application was declined</b></p>
+    <form action="/applications/resubmit/{{ application.id }}/" method="POST">
+        <input id="resubmit" type="submit" class="like" value="Mark As Resolved">
+    </form>
+    {% endif %}
 </div>
 </body>
 </html>

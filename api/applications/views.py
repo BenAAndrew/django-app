@@ -91,3 +91,6 @@ def accept_application(request, application_id):
 
 def reject_application(request, application_id):
     return process_application(application_id, 'submitted', 'declined')
+
+def resubmit_application(request, application_id):
+    return process_application(application_id, 'declined', 'submitted')

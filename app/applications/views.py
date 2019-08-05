@@ -52,3 +52,12 @@ def submitApplication(request, application_id):
     else:
         return render(request, 'index.html',
                       {"applications": getApplications(), "message": "Successfully submitted an application"})
+
+
+def resubmitApplication(request, application_id):
+    r = requests.get(API_URL + "application/resubmit/" + str(application_id) + "/")
+    if r.status_code == 400:
+        return render(request, 'index.html', {"applications": getApplications()})
+    else:
+        return render(request, 'index.html',
+                      {"applications": getApplications(), "message": "Successfully submitted an application"})
