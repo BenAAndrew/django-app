@@ -21,7 +21,7 @@ def accept(request, application_id):
         request.session['message'] = "Error occurred when accepting application"
     else:
         request.session['message'] = "Successfully accepted an application"
-    HttpResponseRedirect('/admin/')
+    return HttpResponseRedirect('/admin/')
 
 
 @check_is_admin
@@ -31,4 +31,4 @@ def reject(request, application_id):
         request.session['message'] = "Error occurred when rejecting application"
     else:
         request.session['message'] = "Successfully rejected an application"
-    HttpResponseRedirect('/admin/')
+    return HttpResponseRedirect('/admin/')

@@ -1,23 +1,5 @@
-import pytest
-import pytest_html
-from selenium import webdriver
-from time import sleep
-
-#Fixture for Chrome
-from selenium.webdriver.support.select import Select
-
-
-@pytest.fixture(scope="class")
-def chrome_driver_init(request):
-    chrome_driver = webdriver.Chrome()
-    request.cls.driver = chrome_driver
-    yield
-    chrome_driver.close()
-
-@pytest.mark.usefixtures("chrome_driver_init")
-class Chrome:
-    pass
-
+from chrome import *
+import json
 
 url = "http://127.0.0.1:8000/"
 id_to_link = {"home" : "application/", "createApplication" : "application/create/",
@@ -33,6 +15,22 @@ class TestNavbar(Chrome):
             self.driver.find_element_by_id(id).click()
             assert self.driver.current_url == url+id_to_link[id]
 
+class TestLogin(Chrome):
+    def test_redirect(self):
+        self.driver.get(url+"applications/")
+        assert "You must login first" in self.driver.find_element_by_id("error").text
+        assert self.driver.current_url  == url+"login/"
+
+    def test_invalid_login(self):
+        self.driver.get(url + "login/")
+        self.driver.find_element_by_name("username").send_keys("abc")
+        self.driver.find_element_by_name("password").send_keys("123")
+        self.driver.find_element_by_id("submit").click()
+        assert "User not found" in self.driver.find_element_by_id("error").text
+        assert self.driver.current_url == url + "login/"
+
+    '''def test_valid_login(self):
+        with open('testLogin.json', 'r') as fh:'''
 
 class TestAddingData(Chrome):
     def test_add_good(self):
