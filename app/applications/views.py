@@ -1,22 +1,22 @@
 from django.shortcuts import render
 from app.dataHandler import *
-from app.userChecks import check_is_user
+from app.userChecks import check_is_user, isAdmin
 from django.http import HttpResponseRedirect
 
 @check_is_user
 def index(request):
     if "message" in request.session:
-        return render(request, 'index.html', {"applications": getApplications(), "message" : getMessage(request)})
+        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications(), "message" : getMessage(request)})
     else:
-        return render(request, 'index.html', {"applications": getApplications()})
+        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications()})
 
 @check_is_user
 def createApplication(request):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'createApplication.html', {"goods" : getGoods(), "message": getMessage(request)})
+            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods" : getGoods(), "message": getMessage(request)})
         else:
-            return render(request, 'createApplication.html', {"goods": getGoods()})
+            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
     elif request.method == "POST":
         r = requests.post(API_URL+"application/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
@@ -30,9 +30,9 @@ def createApplication(request):
 def editApplication(request, application_id):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'editApplication.html', { "application" : getApplication(application_id), "message": getMessage(request)})
+            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id), "message": getMessage(request)})
         else:
-            return render(request, 'editApplication.html', {"application": getApplication(application_id) })
+            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id) })
     elif request.method == "POST":
         r = requests.put(API_URL+"application/"+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
@@ -44,7 +44,7 @@ def editApplication(request, application_id):
 
 @check_is_user
 def viewApplication(request, application_id):
-    return render(request, 'viewApplication.html', { "application" : getApplication(application_id) })
+    return render(request, 'viewApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id)})
 
 @check_is_user
 def deleteApplication(request, application_id):

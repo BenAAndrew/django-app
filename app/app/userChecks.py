@@ -31,10 +31,14 @@ def redirectToHome(request):
     return HttpResponseRedirect('/applications/')
 
 
+def isAdmin(request):
+    token = decodeToken(request)
+    return token is not None and token["admin"]
+
+
 def check_is_admin(input_func):
     def check(*args, **kwargs):
-        token = decodeToken(*args)
-        if token is not None and token["admin"]:
+        if isAdmin(*args):
             return input_func(*args, **kwargs)
         else:
             return redirectToHome(*args)
