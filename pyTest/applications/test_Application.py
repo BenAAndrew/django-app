@@ -1,4 +1,5 @@
 from chrome import *
+import json
 
 url = "http://127.0.0.1:8000/"
 id_to_link = {"home" : "application/", "createApplication" : "application/create/",
@@ -28,8 +29,8 @@ class TestLogin(Chrome):
         assert "User not found" in self.driver.find_element_by_id("error").text
         assert self.driver.current_url == url + "login/"
 
-    def test_valid_login(self):
-
+    '''def test_valid_login(self):
+        with open('testLogin.json', 'r') as fh:'''
 
 class TestAddingData(Chrome):
     def test_add_good(self):
