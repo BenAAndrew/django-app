@@ -4,12 +4,14 @@ from jwt import (
     JWT,
     jwk_from_dict,
 )
+from django.http import HttpResponseRedirect
 
 jwt = JWT()
 
 def getKey():
     with open('key.json', 'r') as fh:
         return jwk_from_dict(json.load(fh))
+
 
 def decodeToken(request):
     try:
@@ -18,9 +20,31 @@ def decodeToken(request):
     except:
         return None
 
-def check_is_user(request):
-    return decodeToken(request) is not None
 
-def check_is_admin(request):
-    token = decodeToken(request)
-    return token is not None and token["admin"]
+def redirectToLogin(request):
+    request.session['message'] = "You must login first"
+    return HttpResponseRedirect('/login/')
+
+
+def redirectToHome(request):
+    request.session['message'] = "You do not have rights to access that page"
+    return HttpResponseRedirect('/applications/')
+
+
+def check_is_admin(input_func):
+    def check(*args, **kwargs):
+        token = decodeToken(*args)
+        if token is not None and token["admin"]:
+            return input_func(*args, **kwargs)
+        else:
+            return redirectToHome(*args)
+    return check
+
+
+def check_is_user(input_func):
+    def check(*args, **kwargs):
+        if decodeToken(*args) is not None:
+            return input_func(*args, **kwargs)
+        else:
+            return redirectToLogin(*args)
+    return check

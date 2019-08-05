@@ -1,10 +1,10 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from app.dataHandler import *
-from app.tools import *
-import json
-import requests
+from app.userChecks import check_is_user
 
+
+@check_is_user
 def index(request):
     if "message" in request.session:
         message = request.session["message"]
@@ -14,6 +14,7 @@ def index(request):
         return render(request, 'viewGoods.html', {"goods": getGoods()})
 
 
+@check_is_user
 def createGood(request):
     if request.method == "GET":
         if "message" in request.session:
@@ -32,6 +33,7 @@ def createGood(request):
             return HttpResponseRedirect('/goods/')
 
 
+@check_is_user
 def editGood(request, good_id):
     if request.method == "GET":
         if "message" in request.session:
@@ -50,10 +52,12 @@ def editGood(request, good_id):
             return HttpResponseRedirect('/goods/')
 
 
+@check_is_user
 def viewGood(request, good_id):
     return render(request, 'viewGood.html', {"good": getGood(good_id)})
 
 
+@check_is_user
 def deleteGood(request, good_id):
     r = requests.delete(API_URL+"application/good/" + str(good_id) + "/")
     request.session['message'] = "Successfully deleted a good"

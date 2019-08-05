@@ -4,44 +4,31 @@ from app.userChecks import check_is_admin
 from django.http import HttpResponseRedirect
 
 
-def redirectToHome(request):
-    request.session['message'] = "You do not have rights to access that page"
-    return HttpResponseRedirect('/applications/')
-
-
+@check_is_admin
 def index(request):
-    if check_is_admin(request):
-        return render(request, 'admin.html', {"applications": getApplications()})
-    else:
-        return redirectToHome(request)
+    return render(request, 'admin.html', {"applications": getApplications()})
 
 
+@check_is_admin
 def review(request, application_id):
-    if check_is_admin(request):
-        return render(request, 'reviewApplication.html', {"application": getApplication(application_id)})
-    else:
-        return redirectToHome(request)
+    return render(request, 'reviewApplication.html', {"application": getApplication(application_id)})
 
 
+@check_is_admin
 def accept(request, application_id):
-    if check_is_admin(request):
-        r = requests.get(API_URL + "application/accept/" + str(application_id) + "/")
-        if r.status_code == 400:
-            request.session['message'] = "Error occurred when accepting application"
-        else:
-            request.session['message'] = "Successfully accepted an application"
-        HttpResponseRedirect('/admin/')
+    r = requests.get(API_URL + "application/accept/" + str(application_id) + "/")
+    if r.status_code == 400:
+        request.session['message'] = "Error occurred when accepting application"
     else:
-        return redirectToHome(request)
+        request.session['message'] = "Successfully accepted an application"
+    HttpResponseRedirect('/admin/')
 
 
+@check_is_admin
 def reject(request, application_id):
-    if check_is_admin(request):
-        r = requests.get(API_URL + "application/reject/" + str(application_id) + "/")
-        if r.status_code == 400:
-            request.session['message'] = "Error occurred when rejecting application"
-        else:
-            request.session['message'] = "Successfully rejected an application"
-        HttpResponseRedirect('/admin/')
+    r = requests.get(API_URL + "application/reject/" + str(application_id) + "/")
+    if r.status_code == 400:
+        request.session['message'] = "Error occurred when rejecting application"
     else:
-        return redirectToHome(request)
+        request.session['message'] = "Successfully rejected an application"
+    HttpResponseRedirect('/admin/')
