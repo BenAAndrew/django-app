@@ -22,4 +22,8 @@ def create(request):
         return render(request, 'createuser.html')
     elif request.method == "POST":
         r = requests.post(API_URL + "login/create/", json=bodyToJson(request.body.decode('utf-8')))
-        return render(request, 'createuser.html')
+        return rHttpResponseRedirect('/login/create/')
+
+def logout(request):
+    request.session['token'] = None
+    return HttpResponseRedirect('/login/')
