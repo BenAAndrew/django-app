@@ -39,3 +39,8 @@ def getGoodsNames(ids):
     for id in ids:
         goods.append({ "id": int(id), "name" : getGood(int(id))["name"]})
     return goods
+
+def getMessage(request):
+    message = request.session["message"]
+    request.session["message"] = None
+    return message
