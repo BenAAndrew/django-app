@@ -10,7 +10,12 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav mr-auto">
-       <li class="nav-item active">
+      {% if isAdmin %}
+      <li class="nav-item active">
+        <a class="nav-link" id="admin" href="/admin/">Home</a>
+      </li>
+      {% else %}
+      <li class="nav-item active">
         <a class="nav-link" id="home" href="/applications/">Home</a>
       </li>
       <li class="nav-item">
@@ -21,6 +26,10 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" id="viewGood" href="/goods/">View Goods</a>
+      </li>
+      {% endif %}
+      <li class="nav-item">
+        <a class="nav-link" id="logout" href="/login/logout/">Logout</a>
       </li>
     </ul>
   </div>

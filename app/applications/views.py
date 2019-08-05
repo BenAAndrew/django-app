@@ -1,63 +1,71 @@
 from django.shortcuts import render
 from app.dataHandler import *
+from app.userChecks import check_is_user, isAdmin
+from django.http import HttpResponseRedirect
 
+@check_is_user
 def index(request):
-    return render(request, 'index.html', {"applications": getApplications()})
+    if "message" in request.session:
+        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications(), "message" : getMessage(request)})
+    else:
+        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications()})
 
-
+@check_is_user
 def createApplication(request):
     if request.method == "GET":
-        return render(request, 'createApplication.html', { "goods" : getGoods() })
+        if "message" in request.session:
+            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods" : getGoods(), "message": getMessage(request)})
+        else:
+            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
     elif request.method == "POST":
         r = requests.post(API_URL+"application/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
-            errorResponse = handleErrorResponse(json.loads(r.content.decode('utf-8')))
-            return render(request, 'createApplication.html',
-                          {"goods": getGoods() , "message" : errorResponse})
+            request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            return HttpResponseRedirect('/applications/create/')
         else:
-            return render(request, 'index.html',
-                      { "applications" : getApplications(), "message" : "Successfully created an application" })
+            request.session['message'] = "Successfully created an application"
+            return HttpResponseRedirect('/applications/')
 
-
+@check_is_user
 def editApplication(request, application_id):
     if request.method == "GET":
-        print(getApplication(application_id))
-        return render(request, 'editApplication.html', { "application" : getApplication(application_id) })
-    elif request.method == "POST":
-        r = requests.put(API_URL+"/application/"+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
-        if r.status_code == 400:
-            errorResponse = handleErrorResponse(json.loads(r.content.decode('utf-8')))
-            return render(request, 'editApplication.html',
-                          { "application" : getApplication(application_id), "message": errorResponse })
+        if "message" in request.session:
+            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id), "message": getMessage(request)})
         else:
-            return render(request, 'index.html',
-                      { "applications" : getApplications(), "message" : "Successfully edited an application" })
+            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id) })
+    elif request.method == "POST":
+        r = requests.put(API_URL+"application/"+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
+        if r.status_code == 400:
+            request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            return HttpResponseRedirect('/applications/edit/'+str(application_id)+"/")
+        else:
+            request.session['message'] = "Successfully edited an application"
+            return HttpResponseRedirect('/applications/')
 
-
+@check_is_user
 def viewApplication(request, application_id):
-    print(getApplication(application_id))
-    return render(request, 'viewApplication.html', { "application" : getApplication(application_id) })
+    return render(request, 'viewApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id)})
 
-
+@check_is_user
 def deleteApplication(request, application_id):
     r = requests.delete(API_URL+"application/" + str(application_id) + "/")
-    return render(request, 'index.html',
-                  { "applications" : getApplications(), "message" : "Successfully deleted an application" })
+    request.session['message'] = "Successfully deleted an application"
+    return HttpResponseRedirect('/applications/')
 
-
+@check_is_user
 def submitApplication(request, application_id):
     r = requests.get(API_URL + "application/submit/" + str(application_id) + "/")
     if r.status_code == 400:
-        return render(request, 'index.html', {"applications": getApplications()})
+        request.session['message'] = "Error occurred submitting an application"
     else:
-        return render(request, 'index.html',
-                      {"applications": getApplications(), "message": "Successfully submitted an application"})
+        request.session['message'] = "Successfully submitted an application"
+    return HttpResponseRedirect('/applications/')
 
-
+@check_is_user
 def resubmitApplication(request, application_id):
     r = requests.get(API_URL + "application/resubmit/" + str(application_id) + "/")
     if r.status_code == 400:
-        return render(request, 'index.html', {"applications": getApplications()})
+        request.session['message'] = "Error occurred submitting an application"
     else:
-        return render(request, 'index.html',
-                      {"applications": getApplications(), "message": "Successfully submitted an application"})
+        request.session['message'] = "Successfully submitted an application"
+    return HttpResponseRedirect('/applications/')
