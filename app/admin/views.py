@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from app.dataHandler import *
-
+from app.userChecks import check_is_admin
+from django.http import HttpResponseRedirect
 
 def index(request):
-    return render(request, 'admin.html', {"applications": getApplications()})
-
+    if check_is_admin(request):
+        return render(request, 'admin.html', {"applications": getApplications()})
+    else:
+        return HttpResponseRedirect('/applications/')
 
 def review(request, application_id):
     return render(request, 'reviewApplication.html', {"application": getApplication(application_id)})
