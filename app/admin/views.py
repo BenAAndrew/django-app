@@ -4,7 +4,7 @@ from app.userChecks import check_is_admin
 from django.http import HttpResponseRedirect
 
 
-def redirectToHome():
+def redirectToHome(request):
     request.session['message'] = "You do not have rights to access that page"
     return HttpResponseRedirect('/applications/')
 
@@ -13,14 +13,14 @@ def index(request):
     if check_is_admin(request):
         return render(request, 'admin.html', {"applications": getApplications()})
     else:
-        redirectToHome()
+        return redirectToHome(request)
 
 
 def review(request, application_id):
     if check_is_admin(request):
         return render(request, 'reviewApplication.html', {"application": getApplication(application_id)})
     else:
-        redirectToHome()
+        return redirectToHome(request)
 
 
 def accept(request, application_id):
@@ -32,7 +32,7 @@ def accept(request, application_id):
             request.session['message'] = "Successfully accepted an application"
         HttpResponseRedirect('/admin/')
     else:
-        redirectToHome()
+        return redirectToHome(request)
 
 
 def reject(request, application_id):
@@ -44,4 +44,4 @@ def reject(request, application_id):
             request.session['message'] = "Successfully rejected an application"
         HttpResponseRedirect('/admin/')
     else:
-        redirectToHome()
+        return redirectToHome(request)

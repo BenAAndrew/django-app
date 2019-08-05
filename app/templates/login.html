@@ -1,5 +1,37 @@
-<form action="/login/" method="POST">
-    <input name="username">
-    <input type="password" name="password">
-    <input type="submit">
-</form>
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="container">
+    {% if message %}
+      <div class="alert red">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ message }}
+      </div>
+      {% endif %}
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Sign In</h5>
+            <form action="/login/" method="POST">
+              <div class="form-label-group">
+                <input name="username" class="form-control" placeholder="Username" required autofocus>
+              </div><br>
+
+              <div class="form-label-group">
+                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+              </div><br>
+
+              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

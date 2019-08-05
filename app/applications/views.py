@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from app.dataHandler import *
+from app.userChecks import check_is_user
 from django.http import HttpResponseRedirect
 
 def index(request):
-    if "message" in request.session:
-        return render(request, 'index.html', {"applications": getApplications(), "message" : getMessage(request)})
+    if check_is_user(request):
+        if "message" in request.session:
+            return render(request, 'index.html', {"applications": getApplications(), "message" : getMessage(request)})
+        else:
+            return render(request, 'index.html', {"applications": getApplications()})
     else:
-        return render(request, 'index.html', {"applications": getApplications()})
+        return HttpResponseRedirect('/login/')
 
 
 def createApplication(request):
