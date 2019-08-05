@@ -3,7 +3,12 @@ from app.dataHandler import *
 
 
 def index(request):
-    return render(request, 'index.html', {"applications": getApplications()})
+    if "message" in request.session:
+        message = request.session["message"]
+        request.session["message"] = None
+        return render(request, 'index.html', {"applications": getApplications(), "message" : message})
+    else:
+        return render(request, 'index.html', {"applications": getApplications()})
 
 
 def createApplication(request):
