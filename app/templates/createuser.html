@@ -1,6 +1,6 @@
 {% extends "login_base.html" %}
 {% block content %}
-<h5 class="card-title text-center">Sign In</h5>
+<h5 class="card-title text-center">Create an account</h5>
 <form action="/login/create/" method="POST">
 <div class="form-label-group">
     <input name="username" class="form-control" placeholder="Username" required autofocus>
@@ -8,6 +8,7 @@
 <div class="form-label-group">
     <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
 </div><br>
-<button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" id="submit">Sign in</button>
+<button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" id="submit">Create Account</button><br>
+<div style="text-align: center;"><a href="/login/">Login</a></div>
 </form>
 {% endblock %}
