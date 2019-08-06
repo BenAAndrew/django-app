@@ -1,0 +1,10 @@
+{% if message %}
+    <div class="alert blue">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    {{ message }}
+{% elif error %}
+   <div class="alert red">
+   <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+   {{ error }}
+{% endif %}
+</div>

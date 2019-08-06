@@ -7,9 +7,7 @@ from app.userChecks import check_is_user, isAdmin
 @check_is_user
 def index(request):
     if "message" in request.session:
-        message = request.session["message"]
-        request.session["message"] = None
-        return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods(), "message": message})
+        return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods(), "message": getMessage(request)})
     else:
         return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
 
@@ -18,9 +16,7 @@ def index(request):
 def createGood(request):
     if request.method == "GET":
         if "message" in request.session:
-            message = request.session["message"]
-            request.session["message"] = None
-            return render(request, 'createGood.html', {"isAdmin" : isAdmin(request), "message": message})
+            return render(request, 'createGood.html', {"isAdmin" : isAdmin(request), "error": getMessage(request)})
         else:
             return render(request, 'createGood.html', {"isAdmin" : isAdmin(request)})
     elif request.method == "POST":
@@ -37,9 +33,7 @@ def createGood(request):
 def editGood(request, good_id):
     if request.method == "GET":
         if "message" in request.session:
-            message = request.session["message"]
-            request.session["message"] = None
-            return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id), "message": message})
+            return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id), "error": getMessage(request)})
         else:
             return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id)})
     elif request.method == "POST":
