@@ -13,6 +13,5 @@ id_to_link_admin = {"admin" : "admin/", "logout" : "login/"}
 testApp = {"name" : "testApp", "destination" : "testLocation"}
 
 def randomString(stringLength):
-    """Generate a random string of fixed length """
-    letters = string.ascii_lowercase
+    letters = string.ascii_lowercase + string.ascii_uppercase
     return ''.join(random.choice(letters) for i in range(stringLength))

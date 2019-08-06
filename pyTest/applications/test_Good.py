@@ -17,7 +17,7 @@ class TestGood(Chrome):
 
     @login_standard_user
     def test_edit_good(self):
-        requests.post(api_url+"goods/", json={"name":"test"})
+        requests.post(api_url+"goods/", json={"name":randomString(10)})
         newVal = "abc"
         self.driver.get(url+id_to_link['viewGood'])
         self.driver.find_elements_by_id("edit")[-1].click()
@@ -37,7 +37,7 @@ class TestGood(Chrome):
 
     @login_standard_user
     def test_delete_good(self):
-        requests.post(api_url + "goods/", json={"name": "test"})
+        requests.post(api_url + "goods/", json={"name": randomString(10)})
         self.driver.get(url + id_to_link["viewGood"])
         totalGoods = len(self.driver.find_elements_by_id("good_name"))
         self.driver.find_element_by_id("edit").click()

@@ -46,7 +46,7 @@
     <h1>Admin Panel</h1>
     <h6>To be reviewed;</h6>
         <div class="container">
-          <div class="row">
+          <div class="row" id="applications">
             {% for app in applications %}
             {% if app.progress == 'Submitted' %}
             <div class="col-md-4">
@@ -55,7 +55,7 @@
                   <h1 class="card-text" id="app_name">{{ app.name|safe }}</h1>
                   <small class="text-muted">{{ app.date|safe }}</small>
                   <meter style="width:100%" max="100" low="25" high="75" optimum="100" value="{{ app.progress_percent }}"></meter>
-                  <p>Progress: <b>{{ app.progress }}</b></p>
+                  <p id="progress">Progress: <b>{{ app.progress }}</b></p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
                         <a href="/admin/review/{{ app.id }}/"><button id="review" type="button" class="btn btn-sm btn-outline-secondary">Review</button></a>

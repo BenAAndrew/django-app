@@ -5,6 +5,12 @@ from setup import *
 from login import login_standard_user
 import requests
 
+def addTestApplication():
+    r = requests.get(api_url + "goods/")
+    test_id = str(json.loads(r.content.decode('utf-8'))[0]["id"])
+    r = requests.post(api_url + "application/", json={"name": randomString(10), "destination": "test", "goods": [test_id]})
+    return json.loads(r.content.decode('utf-8'))["id"]
+
 class TestApplication(Chrome):
     @login_standard_user
     def test_add_application(self):
@@ -19,9 +25,7 @@ class TestApplication(Chrome):
 
     @login_standard_user
     def test_edit_application(self):
-        r = requests.get(api_url + "goods/")
-        test_id = str(json.loads(r.content.decode('utf-8'))[0]["id"])
-        r = requests.post(api_url + "application/", json={"name": "test", "destination": "test", "goods": [test_id]})
+        addTestApplication()
         value = "AWholeNewValue"+randomString(10)
         self.driver.get(url+id_to_link["home"])
         self.driver.find_elements_by_id("edit")[-1].click()
