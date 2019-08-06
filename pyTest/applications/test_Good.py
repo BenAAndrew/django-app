@@ -17,27 +17,30 @@ class TestGood(Chrome):
 
     @login_standard_user
     def test_edit_good(self):
-        value = "goodTest"
+        requests.post(api_url+"goods/", json={"name":"test"})
+        newVal = "abc"
         self.driver.get(url+id_to_link['viewGood'])
         self.driver.find_elements_by_id("edit")[-1].click()
         self.driver.find_element_by_name("name").clear()
-        self.driver.find_element_by_name("name").send_keys(value)
+        self.driver.find_element_by_name("name").send_keys(newVal)
         self.driver.find_element_by_id("edit").click()
         self.driver.get(url+id_to_link['viewGood'])
         newCard = self.driver.find_elements_by_id("good_name")[-1].text
-        assert value == newCard
+        assert newVal == newCard
 
+    @login_standard_user
     def test_view_good(self):
         self.driver.get(url + id_to_link["viewGood"])
         goodName = self.driver.find_element_by_id("good_name").text
         self.driver.find_element_by_id("view").click()
         assert self.driver.find_element_by_id("good_name").text == goodName
 
+    @login_standard_user
     def test_delete_good(self):
-        for i in range(0, len(testGoods)):
-            self.driver.get(url + id_to_link["viewGood"])
-            totalGoods = len(self.driver.find_elements_by_id("good_name"))
-            self.driver.find_element_by_id("edit").click()
-            self.driver.find_element_by_id("delete").click()
-            self.driver.get(url + id_to_link["viewGood"])
-            assert len(self.driver.find_elements_by_id("good_name")) == totalGoods - 1
+        requests.post(api_url + "goods/", json={"name": "test"})
+        self.driver.get(url + id_to_link["viewGood"])
+        totalGoods = len(self.driver.find_elements_by_id("good_name"))
+        self.driver.find_element_by_id("edit").click()
+        self.driver.find_element_by_id("delete").click()
+        self.driver.get(url + id_to_link["viewGood"])
+        assert len(self.driver.find_elements_by_id("good_name")) == totalGoods - 1

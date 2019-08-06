@@ -22,8 +22,8 @@ def decodeToken(request):
 
 
 def redirectToLogin(request):
-    request.session['message'] = "You must users first"
-    return HttpResponseRedirect('/users/')
+    request.session['message'] = "You must login first"
+    return HttpResponseRedirect('/login/')
 
 
 def redirectToHome(request):
