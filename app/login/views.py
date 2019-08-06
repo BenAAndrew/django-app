@@ -10,7 +10,7 @@ def index(request):
         else:
             return render(request, 'login.html')
     elif request.method == "POST":
-        r = requests.post(API_URL + "login/", json=bodyToJson(request.body.decode('utf-8')))
+        r = requests.post(API_URL + "users/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 200:
             request.session['token'] = json.loads(r.content.decode('utf-8'))["token"]
             if isAdmin(request):
@@ -25,7 +25,7 @@ def create(request):
     if request.method == "GET":
         return render(request, 'createuser.html')
     elif request.method == "POST":
-        r = requests.post(API_URL + "login/create/", json=bodyToJson(request.body.decode('utf-8')))
+        r = requests.post(API_URL + "users/create/", json=bodyToJson(request.body.decode('utf-8')))
         return HttpResponseRedirect('/login/create/')
 
 def logout(request):

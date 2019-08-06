@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'applications.apps.ApplicationsConfig',
     'goods.apps.GoodsConfig',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
