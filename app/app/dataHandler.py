@@ -17,7 +17,7 @@ def getApplications():
     return applications
 
 def getGoods():
-    return jsonToDict('http://127.0.0.1:8001/application/good/')
+    return jsonToDict('http://127.0.0.1:8001/goods/')
 
 def getGoodsSelected(ids):
     allGoods = getGoods()
@@ -32,7 +32,7 @@ def getApplication(id):
     return application
 
 def getGood(id):
-    return jsonToDict('http://127.0.0.1:8001/application/good/'+str(id)+"/")
+    return jsonToDict('http://127.0.0.1:8001/goods/'+str(id)+"/")
 
 def getGoodsNames(ids):
     goods = list()

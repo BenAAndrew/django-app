@@ -24,7 +24,7 @@ def createGood(request):
         else:
             return render(request, 'createGood.html', {"isAdmin" : isAdmin(request)})
     elif request.method == "POST":
-        r = requests.post(API_URL+"application/good/", json=bodyToJson(request.body.decode('utf-8')))
+        r = requests.post(API_URL+"goods/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
             request.session["message"] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/create/')
@@ -43,7 +43,7 @@ def editGood(request, good_id):
         else:
             return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id)})
     elif request.method == "POST":
-        r = requests.put(API_URL+"application/good/" + str(good_id) + "/", json=bodyToJson(request.body.decode('utf-8')))
+        r = requests.put(API_URL+"goods/" + str(good_id) + "/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/edit/'+str(good_id)+"/")
@@ -59,6 +59,6 @@ def viewGood(request, good_id):
 
 @check_is_user
 def deleteGood(request, good_id):
-    r = requests.delete(API_URL+"application/good/" + str(good_id) + "/")
+    r = requests.delete(API_URL+"goods/" + str(good_id) + "/")
     request.session['message'] = "Successfully deleted a good"
     return HttpResponseRedirect('/goods/')
