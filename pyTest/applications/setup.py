@@ -7,5 +7,4 @@ id_to_link = {"home" : "applications/", "createApplication" : "applications/crea
 
 id_to_link_admin = {"admin" : "admin/", "logout" : "login/"}
 
-'''
-testApp = {"name" : "testApp", "destination" : "testLocation"}'''
+testApp = {"name" : "testApp", "destination" : "testLocation"}
