@@ -19,7 +19,7 @@ def createApplication(request):
             return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
     elif request.method == "POST":
         print(bodyToJson(request.body.decode('utf-8')))
-        r = requests.post(API_URL+"application/", json=bodyToJson(request.body.decode('utf-8')))
+        r = requests.post(API_URL+"applications/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/create/')
@@ -35,7 +35,7 @@ def editApplication(request, application_id):
         else:
             return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id) })
     elif request.method == "POST":
-        r = requests.put(API_URL+"application/"+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
+        r = requests.put(API_URL+"applications/"+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/edit/'+str(application_id)+"/")
@@ -49,13 +49,13 @@ def viewApplication(request, application_id):
 
 @check_is_user
 def deleteApplication(request, application_id):
-    r = requests.delete(API_URL+"application/" + str(application_id) + "/")
+    r = requests.delete(API_URL+"applications/" + str(application_id) + "/")
     request.session['message'] = "Successfully deleted an application"
     return HttpResponseRedirect('/applications/')
 
 @check_is_user
 def submitApplication(request, application_id):
-    r = requests.get(API_URL + "application/submit/" + str(application_id) + "/")
+    r = requests.get(API_URL + "applications/submit/" + str(application_id) + "/")
     if r.status_code == 400:
         request.session['message'] = "Error occurred submitting an application"
     else:
@@ -64,7 +64,7 @@ def submitApplication(request, application_id):
 
 @check_is_user
 def resubmitApplication(request, application_id):
-    r = requests.get(API_URL + "application/resubmit/" + str(application_id) + "/")
+    r = requests.get(API_URL + "applications/resubmit/" + str(application_id) + "/")
     if r.status_code == 400:
         request.session['message'] = "Error occurred submitting an application"
     else:

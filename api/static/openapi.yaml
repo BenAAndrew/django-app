@@ -1,0 +1,82 @@
+openapi: 3.0.1
+info:
+  title: defaultTitle
+  description: defaultDescription
+  version: "0.1"
+servers:
+- url: http://127.0.0.1:8001
+paths:
+  /goods/:
+    get:
+      description: Auto generated using Swagger Inspector
+      responses:
+        200:
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                0:
+                  value: '[{"id": 19, "name": "testGood"}]'
+      servers:
+      - url: http://127.0.0.1:8001
+    servers:
+    - url: http://127.0.0.1:8001
+  /applications/:
+    get:
+      description: Auto generated using Swagger Inspector
+      responses:
+        200:
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                0:
+                  value: '[{"id": 49, "name": "testApp", "date": "2019-08-06T14:53:14.186421Z",
+                    "destination": "dest", "progress": "draft", "goods": [19]}]'
+      servers:
+      - url: http://127.0.0.1:8001
+    servers:
+    - url: http://127.0.0.1:8001
+  /applications/49:
+    get:
+      description: Auto generated using Swagger Inspector
+      responses:
+        200:
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              examples:
+                0:
+                  value: '{"id": 49, "name": "testApp", "date": "2019-08-06T14:53:14.186421Z",
+                    "destination": "dest", "progress": "draft", "goods": [19]}'
+      servers:
+      - url: http://127.0.0.1:8001
+    servers:
+    - url: http://127.0.0.1:8001
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        date:
+          type: string
+        name:
+          type: string
+        destination:
+          type: string
+        progress:
+          type: string
+        goods:
+          type: array
+          items:
+            type: integer
+        id:
+          type: integer
