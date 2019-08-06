@@ -1,17 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<div style="padding-left: 50px;">
-    {% if message %}
-      <div class="alert red">
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-        {{ message }}
-      </div>
-    {% endif %}
-    <form action="/goods/create/" method="post">
-        {% csrf_token %}
-        <h1>Name</h1>
-        <input name="name" required><br><br>
-        <input id="submit" type="submit">
-    </form>
-</div>
+<form action="/goods/create/" method="post">
+    {% csrf_token %}
+    <h1>Name</h1>
+    <input name="name" required><br><br>
+    <input id="submit" type="submit">
+</form>
 {% endblock %}

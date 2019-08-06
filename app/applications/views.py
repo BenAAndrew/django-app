@@ -14,7 +14,7 @@ def index(request):
 def createApplication(request):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods" : getGoods(), "message": getMessage(request)})
+            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods" : getGoods(), "error": getMessage(request)})
         else:
             return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
     elif request.method == "POST":
@@ -31,7 +31,7 @@ def createApplication(request):
 def editApplication(request, application_id):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id), "message": getMessage(request)})
+            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id), "error": getMessage(request)})
         else:
             return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id) })
     elif request.method == "POST":

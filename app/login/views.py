@@ -6,7 +6,7 @@ from app.userChecks import isAdmin
 def index(request):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'login.html', {"message" : getMessage(request)})
+            return render(request, 'login.html', {"error" : getMessage(request)})
         else:
             return render(request, 'login.html')
     elif request.method == "POST":
