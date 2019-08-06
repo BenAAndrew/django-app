@@ -18,6 +18,7 @@ def createApplication(request):
         else:
             return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
     elif request.method == "POST":
+        print(bodyToJson(request.body.decode('utf-8')))
         r = requests.post(API_URL+"application/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
