@@ -1,34 +1,22 @@
 import json
 from django.http import HttpResponse, JsonResponse
 from rest_framework.parsers import JSONParser
+from rest_framework.generics import GenericAPIView
 from .models import Application, Good
 from .serializers import ApplicationSerializer
 
-def application_detail(request, application_id):
-    try:
-        application = Application.objects.get(pk=application_id)
-    except:
-        return HttpResponse(status=404)
-    if request.method == 'GET':
-        serializer = ApplicationSerializer(application, many=False)
-        return JsonResponse(serializer.data, safe=False)
-    elif request.method == 'PUT':
-        data = json.loads(request.body)
-        serializer = ApplicationSerializer(application, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
-    elif request.method == 'DELETE':
-        application.delete()
-        return HttpResponse(status=204)
 
-def application_list(request):
-    if request.method == 'GET':
+class ApplicationsView(GenericAPIView):
+    serializer_class = ApplicationSerializer
+    model = Application
+    queryset = Application.objects.all()
+
+    def get(self, request):
         applications = Application.objects.all()
         serializer = ApplicationSerializer(applications, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
-    elif request.method == 'POST':
+
+    def post(self, request):
         values = json.loads(request.body)
         serializer = ApplicationSerializer(data=values)
         if serializer.is_valid():
@@ -37,26 +25,61 @@ def application_list(request):
         return JsonResponse(serializer.errors, status=400)
 
 
-def process_application(application_id, current_state, new_state):
-    try:
-        application = Application.objects.get(pk=application_id)
-    except:
-        return HttpResponse(status=404)
-    if application.progress == current_state:
-        application.progress = new_state
-        application.save()
-        return HttpResponse(status=204)
-    else:
-        return HttpResponse(status=404)
+class ApplicationView(GenericAPIView):
+    serializer_class = ApplicationSerializer
+    model = Application
+    queryset = Application.objects.all()
 
-def submit_application(request, application_id):
-    return process_application(application_id, 'draft','submitted')
+    def get(self, request, application_id):
+        try:
+            application = Application.objects.get(pk=application_id)
+            serializer = ApplicationSerializer(application, many=False)
+            return JsonResponse(serializer.data, safe=False)
+        except Application.DoesNotExist:
+            return HttpResponse(status=404)
 
-def accept_application(request, application_id):
-    return process_application(application_id, 'submitted', 'approved')
+    def put(self, request, application_id):
+        try:
+            application = Application.objects.get(pk=application_id)
+            data = json.loads(request.body)
+            serializer = ApplicationSerializer(application, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data)
+            return JsonResponse(serializer.errors, status=400)
+        except Application.DoesNotExist:
+            return HttpResponse(status=404)
 
-def reject_application(request, application_id):
-    return process_application(application_id, 'submitted', 'declined')
+    def delete(self, request, application_id):
+        try:
+            application = Application.objects.get(pk=application_id)
+            application.delete()
+            return HttpResponse(status=204)
+        except Application.DoesNotExist:
+            return HttpResponse(status=404)
 
-def resubmit_application(request, application_id):
-    return process_application(application_id, 'declined', 'submitted')
+
+class ApplicationProgressView(GenericAPIView):
+    serializer_class = ApplicationSerializer
+    model = Application
+    queryset = Application.objects.all()
+
+    def check_progress_update(self, new_progress, old_progress):
+        if new_progress == "submitted":
+            return old_progress in ["draft","declined"]
+        elif new_progress in ["approved", "declined"]:
+            return old_progress == "submitted"
+        else:
+            return False
+
+    def get(self, request, application_id, new_progress):
+        try:
+            application = Application.objects.get(pk=application_id)
+            print(application.progress + " => " + new_progress)
+            if self.check_progress_update(new_progress, application.progress):
+                application.progress = new_progress
+                application.save()
+                return HttpResponse(status=204)
+            return HttpResponse(status=404)
+        except Application.DoesNotExist:
+            return HttpResponse(status=404)

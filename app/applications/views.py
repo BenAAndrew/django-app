@@ -55,16 +55,7 @@ def deleteApplication(request, application_id):
 
 @check_is_user
 def submitApplication(request, application_id):
-    r = requests.get(API_URL + "applications/submit/" + str(application_id) + "/")
-    if r.status_code == 400:
-        request.session['message'] = "Error occurred submitting an application"
-    else:
-        request.session['message'] = "Successfully submitted an application"
-    return HttpResponseRedirect('/applications/')
-
-@check_is_user
-def resubmitApplication(request, application_id):
-    r = requests.get(API_URL + "applications/resubmit/" + str(application_id) + "/")
+    r = requests.get(API_URL + "applications/progress/submitted/" + str(application_id) + "/")
     if r.status_code == 400:
         request.session['message'] = "Error occurred submitting an application"
     else:
