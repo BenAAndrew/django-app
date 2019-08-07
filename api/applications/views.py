@@ -4,7 +4,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.generics import GenericAPIView
 from .models import Application, Good
 from .serializers import ApplicationSerializer
-from django.shortcuts import get_object_or_404
+
 
 class ApplicationsView(GenericAPIView):
     serializer_class = ApplicationSerializer
@@ -21,6 +21,7 @@ class ApplicationsView(GenericAPIView):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
 
 class ApplicationView(GenericAPIView):
     serializer_class = ApplicationSerializer
@@ -54,7 +55,8 @@ class ApplicationView(GenericAPIView):
             return HttpResponse(status=204)
         return self.process_application(application_id, delete_application)
 
-def process_application(application_id, current_state, new_state):
+
+def application_progress(application_id, current_state, new_state):
     try:
         application = Application.objects.get(pk=application_id)
     except:
@@ -66,14 +68,18 @@ def process_application(application_id, current_state, new_state):
     else:
         return HttpResponse(status=404)
 
+
 def submit_application(request, application_id):
-    return process_application(application_id, 'draft','submitted')
+    return application_progress(application_id, 'draft','submitted')
+
 
 def accept_application(request, application_id):
-    return process_application(application_id, 'submitted', 'approved')
+    return application_progress(application_id, 'submitted', 'approved')
+
 
 def reject_application(request, application_id):
-    return process_application(application_id, 'submitted', 'declined')
+    return application_progress(application_id, 'submitted', 'declined')
+
 
 def resubmit_application(request, application_id):
-    return process_application(application_id, 'declined', 'submitted')
+    return application_progress(application_id, 'declined', 'submitted')
