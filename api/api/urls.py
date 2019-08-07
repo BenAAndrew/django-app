@@ -16,6 +16,29 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from rest_framework import viewsets, schemas
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from rest_framework_swagger.views import get_swagger_view
+
+from applications.models import Application
+from applications.serializers import ApplicationSerializer
+
+class ApplicationViewSet(viewsets.ModelViewSet):
+    """
+    request: return applications
+    """
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+    model = Application
+
+    @action(detail='blah')
+    def set_price(self, request, pk):
+        """An example action to on the ViewSet."""
+        return Response('20$')
+
+schema_view = get_swagger_view(title='Pastebin API')
 
 urlpatterns = [
     path('applications/', include('applications.urls')),
@@ -23,4 +46,5 @@ urlpatterns = [
     path('users/', include('users.urls')),
     #path('admin/', admin.site.urls),
     path('swagger/', TemplateView.as_view(template_name='swagger.html'), name='swagger-ui'),
+    path('docs/', schema_view),
 ]

@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',
+    'rest_framework_swagger',
     'applications.apps.ApplicationsConfig',
     'goods.apps.GoodsConfig',
     'users.apps.UsersConfig',
@@ -69,6 +70,11 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+}
+
 
 WSGI_APPLICATION = 'api.wsgi.application'
 

@@ -4,6 +4,10 @@ from .models import Application, Good
 
 
 class ApplicationSerializer(serializers.Serializer):
+    class Meta:
+        model = Application
+        exclude = {}
+
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, max_length=200)
     date = serializers.DateTimeField(read_only=True)
