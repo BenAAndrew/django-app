@@ -16,7 +16,7 @@ def review(request, application_id):
 
 @check_is_admin
 def accept(request, application_id):
-    r = requests.get(API_URL + "application/accept/" + str(application_id) + "/")
+    r = requests.get(API_URL + "applications/progress/approved/" + str(application_id) + "/")
     if r.status_code == 400:
         request.session['message'] = "Error occurred when accepting application"
     else:
@@ -26,7 +26,7 @@ def accept(request, application_id):
 
 @check_is_admin
 def reject(request, application_id):
-    r = requests.get(API_URL + "application/reject/" + str(application_id) + "/")
+    r = requests.get(API_URL + "applications/progress/declined/" + str(application_id) + "/")
     if r.status_code == 400:
         request.session['message'] = "Error occurred when rejecting application"
     else:

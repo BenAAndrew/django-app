@@ -18,7 +18,7 @@
 <hr>
 {% if application.progress == "declined" %}
 <p><b>This application was declined</b></p>
-<form action="/applications/resubmit/{{ application.id }}/" method="POST">
+<form action="/applications/submit/{{ application.id }}/" method="POST">
     <input id="resubmit" type="submit" class="like" value="Mark As Resolved">
 </form>
 {% endif %}
