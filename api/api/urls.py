@@ -18,13 +18,12 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='Pastebin API')
+schema_view = get_swagger_view(title='API Docs')
 
 urlpatterns = [
     path('applications/', include('applications.urls')),
     path('goods/', include('goods.urls')),
     path('users/', include('users.urls')),
     #path('admin/', admin.site.urls),
-    path('swagger/', TemplateView.as_view(template_name='swagger.html'), name='swagger-ui'),
     path('docs/', schema_view)
 ]
