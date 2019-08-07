@@ -2,33 +2,15 @@ openapi: 3.0.1
 info:
   title: defaultTitle
   description: defaultDescription
-  version: "0.1"
+  version: '0.1'
 servers:
-- url: http://127.0.0.1:8001
+  - url: 'http://127.0.0.1:8001'
 paths:
-  /goods/:
-    get:
-      description: Auto generated using Swagger Inspector
-      responses:
-        200:
-          description: Auto generated using Swagger Inspector
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-              examples:
-                0:
-                  value: '[{"id": 19, "name": "testGood"}]'
-      servers:
-      - url: http://127.0.0.1:8001
-    servers:
-    - url: http://127.0.0.1:8001
   /applications/:
     get:
       description: Auto generated using Swagger Inspector
       responses:
-        200:
+        '200':
           description: Auto generated using Swagger Inspector
           content:
             application/json:
@@ -36,47 +18,390 @@ paths:
                 type: object
                 properties: {}
               examples:
-                0:
-                  value: '[{"id": 49, "name": "testApp", "date": "2019-08-06T14:53:14.186421Z",
-                    "destination": "dest", "progress": "draft", "goods": [19]}]'
+                '0':
+                  value: >-
+                    [{"id": 49, "name": "testApp", "date":
+                    "2019-08-06T14:53:14.186421Z", "destination": "dest",
+                    "progress": "approved", "goods": [19]}, {"id": 50, "name":
+                    "testApp2", "date": "2019-08-06T15:16:21.531973Z",
+                    "destination": "dest", "progress": "submitted", "goods":
+                    [19]}, {"id": 51, "name": "newApp", "date":
+                    "2019-08-06T15:23:06.705342Z", "destination": "dest",
+                    "progress": "draft", "goods": [19]}, {"id": 52, "name":
+                    "newApplication", "date": "2019-08-06T15:23:53.940996Z",
+                    "destination": "dest", "progress": "draft", "goods": [19]}]
       servers:
-      - url: http://127.0.0.1:8001
+        - url: 'http://127.0.0.1:8001'
     servers:
-    - url: http://127.0.0.1:8001
-  /applications/49:
+      - url: 'http://127.0.0.1:8001'
+  /goods/:
     get:
       description: Auto generated using Swagger Inspector
       responses:
-        200:
+        '200':
           description: Auto generated using Swagger Inspector
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200'
+                type: object
+                properties: {}
               examples:
-                0:
-                  value: '{"id": 49, "name": "testApp", "date": "2019-08-06T14:53:14.186421Z",
-                    "destination": "dest", "progress": "draft", "goods": [19]}'
+                '0':
+                  value: '[{"id": 19, "name": "testGood"}]'
       servers:
-      - url: http://127.0.0.1:8001
+        - url: 'http://127.0.0.1:8001'
+    post:
+      description: Auto generated using Swagger Inspector
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+            examples:
+              '0':
+                value: |-
+                  {
+                      "name": "testGoodNew"
+                  }
+      responses:
+        '201':
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: integer
+              examples:
+                '0':
+                  value: '{"id": 20, "name": "testGoodNew"}'
+      servers:
+        - url: 'http://127.0.0.1:8001'
     servers:
-    - url: http://127.0.0.1:8001
-components:
-  schemas:
-    inline_response_200:
-      type: object
-      properties:
-        date:
-          type: string
-        name:
-          type: string
-        destination:
-          type: string
-        progress:
-          type: string
-        goods:
-          type: array
-          items:
+      - url: 'http://127.0.0.1:8001'
+  /users/create/:
+    post:
+      description: Auto generated using Swagger Inspector
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                username:
+                  type: string
+            examples:
+              '0':
+                value: |-
+                  {
+                      "username":"new",
+                      "password":"new"
+                  }
+      responses:
+        '204':
+          description: Auto generated using Swagger Inspector
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    servers:
+      - url: 'http://127.0.0.1:8001'
+  /goods/19/:
+    get:
+      description: Auto generated using Swagger Inspector
+      responses:
+        '200':
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: integer
+              examples:
+                '0':
+                  value: '{"id": 19, "name": "testGood"}'
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    put:
+      description: Auto generated using Swagger Inspector
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+            examples:
+              '0':
+                value: |-
+                  {
+                      "name": "testGoodTwo"
+                  }
+      responses:
+        '200':
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: integer
+              examples:
+                '0':
+                  value: '{"id": 19, "name": "testGoodTwo"}'
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    delete:
+      description: Auto generated using Swagger Inspector
+      responses:
+        '204':
+          description: Auto generated using Swagger Inspector
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    servers:
+      - url: 'http://127.0.0.1:8001'
+  /users/:
+    post:
+      description: Auto generated using Swagger Inspector
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                username:
+                  type: string
+            examples:
+              '0':
+                value: |-
+                  {
+                      "username":"abc",
+                      "password":"abc"
+                  }
+      responses:
+        '200':
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+              examples:
+                '0':
+                  value: >-
+                    {"token":
+                    "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ICJhYmMiLCAiYWRtaW4iOiBmYWxzZX0.KHQJWOnjOmjDrkYPWY2UvJAAwHnq6hw4aC2X8BSL_PbPzqFd-ncjYQzZmF6yVcat4EJnVY1_nz4Ld8HqcA07WDDOYZNYSoHWeebXHtjRzitTER_mUqK6mxBIA3O8lff7PGVTywa2uwyxVCPFPmI-04lx6uh88bXXoDXcfZLBmjWs3sa_YDx-aa1iZopUe5LiRGl43NV5VPj8bblymq_qA26ByGkECYheBi0OqthfjufpX2h4Bq1qXnpIvLhWCuGaJDm_FXqrBXdKlPUB2KDTS-YeTBU4JPMErACLGj1CrTZhV_OqlSfNBRqd_G8fXxM5ueFbdk9pt7eFYFBkh4eo9g"}
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    servers:
+      - url: 'http://127.0.0.1:8001'
+  /applications/submit/{application_number}/:
+    get:
+      parameters:
+        - in: path
+          name: application_number
+          schema:
             type: integer
-        id:
-          type: integer
+          required: true
+          description: Numeric ID of the application to get
+      description: Auto generated using Swagger Inspector
+      responses:
+        '204':
+          description: Auto generated using Swagger Inspector
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    servers:
+      - url: 'http://127.0.0.1:8001'
+  /applications/resubmit/{application_number}/:
+    get:
+      parameters:
+        - in: path
+          name: application_number
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the application to get
+      description: Auto generated using Swagger Inspector
+      responses:
+        '204':
+          description: Auto generated using Swagger Inspector
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    servers:
+      - url: 'http://127.0.0.1:8001'
+  /applications/reject/{application_number}/:
+    get:
+      parameters:
+        - in: path
+          name: application_number
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the application to get
+      description: Auto generated using Swagger Inspector
+      responses:
+        '204':
+          description: Auto generated using Swagger Inspector
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    servers:
+      - url: 'http://127.0.0.1:8001'
+  /applications/accept/{application_number}/:
+    get:
+      parameters:
+        - in: path
+          name: application_number
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the application to get
+      description: Auto generated using Swagger Inspector
+      responses:
+        '204':
+          description: Auto generated using Swagger Inspector
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    servers:
+      - url: 'http://127.0.0.1:8001'
+  /applications/{application_number}/:
+    put:
+      parameters:
+        - in: path
+          name: application_number
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the application to get
+      description: Auto generated using Swagger Inspector
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                destination:
+                  type: string
+                goods:
+                  type: array
+                  items:
+                    type: integer
+            examples:
+              '0':
+                value: |-
+                  {
+                      "name" : "newApplication123",
+                      "destination": "dest",
+                      "goods": [19]
+                  }
+              '1':
+                value: |-
+                  {
+                      "name" : "newApplication123",
+                      "destination": "dest",
+                      "goods": [19]
+                  }
+      responses:
+        '200':
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                  name:
+                    type: string
+                  destination:
+                    type: string
+                  progress:
+                    type: string
+                  goods:
+                    type: array
+                    items:
+                      type: integer
+                  id:
+                    type: integer
+              examples:
+                '0':
+                  value: >-
+                    {"id": 50, "name": "newApplication123", "date":
+                    "2019-08-06T15:16:21.531973Z", "destination": "dest",
+                    "progress": "draft", "goods": [19]}
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    delete:
+      parameters:
+        - in: path
+          name: application_number
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the application to get
+      description: Auto generated using Swagger Inspector
+      responses:
+        '204':
+          description: Auto generated using Swagger Inspector
+      servers:
+        - url: 'http://127.0.0.1:8001'
+    servers:
+      - url: 'http://127.0.0.1:8001'
+    get:
+      parameters:
+        - in: path
+          name: application_number
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the application to get
+      description: Auto generated using Swagger Inspector
+      responses:
+        '200':
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                  name:
+                    type: string
+                  destination:
+                    type: string
+                  progress:
+                    type: string
+                  goods:
+                    type: array
+                    items:
+                      type: integer
+                  id:
+                    type: integer
+              examples:
+                '0':
+                  value: >-
+                    {"id": 49, "name": "testApp", "date":
+                    "2019-08-06T14:53:14.186421Z", "destination": "dest",
+                    "progress": "draft", "goods": [19]}
+      servers:
+        - url: 'http://127.0.0.1:8001'
