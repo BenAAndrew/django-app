@@ -10,7 +10,7 @@ def progressToProgressPercent(application):
         return (progress.index(state)+1) * 25
 
 def getApplications(request):
-    applications = requestsHandler.get("http://127.0.0.1:8001/applications/", request.COOKIES)
+    applications = decode_request(requests.get("http://127.0.0.1:8001/applications/", cookies=request.COOKIES))
     for i in range(0, len(applications)):
         applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
         applications[i]["progress"] = applications[i]["progress"].capitalize()

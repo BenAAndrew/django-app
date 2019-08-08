@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from app.dataHandler import *
-from app.tools import requestsHandler
 from app.userChecks import check_is_user, isAdmin
 from django.http import HttpResponseRedirect
 
