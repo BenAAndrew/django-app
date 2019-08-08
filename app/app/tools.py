@@ -25,9 +25,6 @@ def bodyToJson(body):
             data[name] = value
     return data
 
-def jsonToDict(url):
-    r = requests.get(url)
-    return json.loads(r.content.decode('utf-8'))
 
 def decode_request(request):
     return json.loads(request.content.decode('utf-8'))

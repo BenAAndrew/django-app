@@ -14,7 +14,8 @@ class GoodsView(GenericAPIView):
     queryset = Good.objects.all()
 
     def get(self, request):
-        goods = Good.objects.all()
+        user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+        goods = Good.objects.all().filter(user=user_id)
         serializer = GoodSerializer(goods, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -35,7 +36,8 @@ class GoodView(GenericAPIView):
 
     def get(self, request, good_id):
         try:
-            good = Good.objects.get(pk=good_id)
+            user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            good = Good.objects.get(pk=good_id, user=user_id)
             serializer = GoodSerializer(good, many=False)
             return JsonResponse(serializer.data, safe=False)
         except Good.DoesNotExist:
@@ -43,7 +45,8 @@ class GoodView(GenericAPIView):
 
     def put(self, request, good_id):
         try:
-            good = Good.objects.get(pk=good_id)
+            user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            good = Good.objects.get(pk=good_id, user=user_id)
             data = JSONParser().parse(request)
             data["user"] = tokenHandler.get_user_id_token(data["token"])
             serializer = GoodSerializer(good, data=data)
@@ -56,7 +59,8 @@ class GoodView(GenericAPIView):
 
     def delete(self, request, good_id):
         try:
-            good = Good.objects.get(pk=good_id)
+            user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            good = Good.objects.get(pk=good_id, user=user_id)
             good.delete()
             return HttpResponse(status=204)
         except Good.DoesNotExist:

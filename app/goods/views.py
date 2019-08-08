@@ -39,7 +39,7 @@ def createGood(request):
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
         data["token"] = request.session["token"]
-        r = requests.post(API_URL+"goods/", json=data)
+        r = requests.post(API_URL+"goods/", json=data, cookies=request.COOKIES)
         if r.status_code == 400:
             request.session["message"] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/create/')
@@ -58,7 +58,7 @@ def editGood(request, good_id):
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
         data["token"] = request.session["token"]
-        r = requests.put(API_URL+"goods/" + str(good_id) + "/", json=data)
+        r = requests.put(API_URL+"goods/" + str(good_id) + "/", json=data, cookies=request.COOKIES)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/edit/'+str(good_id)+"/")
@@ -74,6 +74,6 @@ def viewGood(request, good_id):
 
 @check_is_user
 def deleteGood(request, good_id):
-    r = requests.delete(API_URL+"goods/" + str(good_id) + "/")
+    r = requests.delete(API_URL+"goods/" + str(good_id) + "/", cookies=request.COOKIES)
     request.session['message'] = "Successfully deleted a good"
     return HttpResponseRedirect('/goods/')
