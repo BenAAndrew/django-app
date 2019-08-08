@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from app.dataHandler import *
 from app.userChecks import check_is_admin, isAdmin
 from django.http import HttpResponseRedirect
+from applications.views import getApplications, getApplication
+from app.tools import *
 
 
 @check_is_admin

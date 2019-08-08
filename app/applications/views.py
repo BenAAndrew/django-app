@@ -1,8 +1,30 @@
 from django.shortcuts import render
-from app.dataHandler import *
 from app.userChecks import check_is_user, isAdmin
 from django.http import HttpResponseRedirect
+from goods.views import getGoods, getGoodsNames, getGoodsSelected
+from app.tools import *
 
+progress = ['draft', 'submitted', 'processing', 'approved']
+
+def progressToProgressPercent(application):
+    state = application["progress"]
+    if state == 'declined':
+        return 5
+    else:
+        return (progress.index(state)+1) * 25
+
+def getApplications(request):
+    applications = decode_request(requests.get("http://127.0.0.1:8001/applications/", cookies=request.COOKIES))
+    for i in range(0, len(applications)):
+        applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
+        applications[i]["progress"] = applications[i]["progress"].capitalize()
+    return applications
+
+def getApplication(id, request):
+    application = jsonToDict('http://127.0.0.1:8001/applications/'+str(id)+"/")
+    application["goods"] = getGoodsNames(application["goods"], request)
+    application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
+    return application
 
 @check_is_user
 def index(request):

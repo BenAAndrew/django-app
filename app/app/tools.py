@@ -37,3 +37,8 @@ def handleErrorResponse(error):
     for key in error:
         message += key + ": " + error[key][0]
     return message
+
+def getMessage(request):
+    message = request.session["message"]
+    request.session["message"] = None
+    return message
