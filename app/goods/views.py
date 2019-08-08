@@ -20,7 +20,9 @@ def createGood(request):
         else:
             return render(request, 'createGood.html', {"isAdmin" : isAdmin(request)})
     elif request.method == "POST":
-        r = requests.post(API_URL+"goods/", json=bodyToJson(request.body.decode('utf-8')))
+        data = bodyToJson(request.body.decode('utf-8'))
+        data["token"] = request.session["token"]
+        r = requests.post(API_URL+"goods/", json=data)
         if r.status_code == 400:
             request.session["message"] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/create/')
@@ -37,7 +39,9 @@ def editGood(request, good_id):
         else:
             return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id)})
     elif request.method == "POST":
-        r = requests.put(API_URL+"goods/" + str(good_id) + "/", json=bodyToJson(request.body.decode('utf-8')))
+        data = bodyToJson(request.body.decode('utf-8'))
+        data["token"] = request.session["token"]
+        r = requests.put(API_URL+"goods/" + str(good_id) + "/", json=data)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/edit/'+str(good_id)+"/")

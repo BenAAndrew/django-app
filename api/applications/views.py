@@ -1,11 +1,12 @@
 import json
 from django.http import HttpResponse, JsonResponse
-from rest_framework.parsers import JSONParser
 from rest_framework.generics import GenericAPIView
 from .models import Application, Good
 from .serializers import ApplicationSerializer
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from users.views import TokenHandler
+
+tokenHandler = TokenHandler()
 
 class ApplicationsView(GenericAPIView):
     serializer_class = ApplicationSerializer
@@ -14,13 +15,15 @@ class ApplicationsView(GenericAPIView):
 
     @swagger_auto_schema(operation_description="Get all applications")
     def get(self, request):
+        print(request.COOKIES)
         applications = Application.objects.all()
         serializer = ApplicationSerializer(applications, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
 
     def post(self, request):
-        values = json.loads(request.body)
-        serializer = ApplicationSerializer(data=values)
+        data = json.loads(request.body)
+        data["user"] = tokenHandler.get_user_id_token(data["token"])
+        serializer = ApplicationSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
@@ -45,6 +48,7 @@ class ApplicationView(GenericAPIView):
         try:
             application = Application.objects.get(pk=application_id)
             data = json.loads(request.body)
+            data["user"] = tokenHandler.get_user_id_token(data["token"])
             serializer = ApplicationSerializer(application, data=data)
             if serializer.is_valid():
                 serializer.save()
