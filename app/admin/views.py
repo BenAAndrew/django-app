@@ -1,8 +1,16 @@
 from django.shortcuts import render
 from app.userChecks import check_is_admin, isAdmin
 from django.http import HttpResponseRedirect
-from applications.views import getApplications, getApplication
+from applications.views import getApplication, progressToProgressPercent
 from app.tools import *
+
+
+def getApplications(request):
+    applications = decode_request(requests.get("http://127.0.0.1:8001/admin/", cookies=request.COOKIES))
+    for i in range(0, len(applications)):
+        applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
+        applications[i]["progress"] = applications[i]["progress"].capitalize()
+    return applications
 
 
 @check_is_admin

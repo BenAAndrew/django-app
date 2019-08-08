@@ -19,6 +19,7 @@ from .swagger import get_schema
 
 urlpatterns = [
     path('applications/', include('applications.urls')),
+    path('admin/', include('admin.urls')),
     path('goods/', include('goods.urls')),
     path('users/', include('users.urls')),
     path('docs/', get_schema()),
