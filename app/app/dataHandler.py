@@ -31,13 +31,13 @@ def getApplication(id, request):
     application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
     return application
 
-def getGood(id):
-    return jsonToDict('http://127.0.0.1:8001/goods/'+str(id)+"/")
+def getGood(id, request):
+    return decode_request(requests.get('http://127.0.0.1:8001/goods/'+str(id)+"/", cookies=request.COOKIES))
 
-def getGoodsNames(ids):
+def getGoodsNames(ids, request):
     goods = list()
     for id in ids:
-        goods.append({ "id": int(id), "name" : getGood(int(id))["name"]})
+        goods.append({ "id": int(id), "name" : getGood(int(id), request)["name"]})
     return goods
 
 def getMessage(request):

@@ -35,9 +35,9 @@ def createGood(request):
 def editGood(request, good_id):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id), "error": getMessage(request)})
+            return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id, request), "error": getMessage(request)})
         else:
-            return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id)})
+            return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id, request)})
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
         data["token"] = request.session["token"]
@@ -52,7 +52,7 @@ def editGood(request, good_id):
 
 @check_is_user
 def viewGood(request, good_id):
-    return render(request, 'viewGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id)})
+    return render(request, 'viewGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id, request)})
 
 
 @check_is_user
