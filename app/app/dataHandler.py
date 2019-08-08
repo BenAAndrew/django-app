@@ -16,19 +16,19 @@ def getApplications(request):
         applications[i]["progress"] = applications[i]["progress"].capitalize()
     return applications
 
-def getGoods():
-    return jsonToDict('http://127.0.0.1:8001/goods/')
+def getGoods(request):
+    return decode_request(requests.get("http://127.0.0.1:8001/goods/", cookies=request.COOKIES))
 
-def getGoodsSelected(ids):
-    allGoods = getGoods()
+def getGoodsSelected(ids, request):
+    allGoods = getGoods(request)
     for i in range(0, len(allGoods)):
         allGoods[i]["selected"] = allGoods[i]["id"] in ids
     return allGoods
 
-def getApplication(id):
+def getApplication(id, request):
     application = jsonToDict('http://127.0.0.1:8001/applications/'+str(id)+"/")
     application["goods"] = getGoodsNames(application["goods"])
-    application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]])
+    application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
     return application
 
 def getGood(id):

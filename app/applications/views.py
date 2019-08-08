@@ -33,7 +33,7 @@ def createApplication(request):
 def editApplication(request, application_id):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id), "error": getMessage(request)})
+            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id, request), "error": getMessage(request)})
         else:
             return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id) })
     elif request.method == "POST":
@@ -49,7 +49,7 @@ def editApplication(request, application_id):
 
 @check_is_user
 def viewApplication(request, application_id):
-    return render(request, 'viewApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id)})
+    return render(request, 'viewApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id, request)})
 
 @check_is_user
 def deleteApplication(request, application_id):

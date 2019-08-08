@@ -7,9 +7,9 @@ from app.userChecks import check_is_user, isAdmin
 @check_is_user
 def index(request):
     if "message" in request.session:
-        return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods(), "message": getMessage(request)})
+        return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods(request), "message": getMessage(request)})
     else:
-        return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
+        return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods(request)})
 
 
 @check_is_user
