@@ -7,12 +7,10 @@ from django.http import HttpResponseRedirect
 
 @check_is_user
 def index(request):
-    requestsHandler.set_cookie('duck','yes')
-    requestsHandler.get()
     if "message" in request.session:
-        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications(), "message" : getMessage(request)})
+        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications(request), "message" : getMessage(request)})
     else:
-        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications()})
+        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications(request)})
 
 @check_is_user
 def createApplication(request):

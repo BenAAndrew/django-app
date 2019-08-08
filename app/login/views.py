@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from app.dataHandler import *
+from app.tools import *
 from django.http import HttpResponseRedirect
 from app.userChecks import isAdmin
 
@@ -10,13 +11,15 @@ def index(request):
         else:
             return render(request, 'login.html')
     elif request.method == "POST":
-        r = requests.post(API_URL + "users/", json=bodyToJson(request.body.decode('utf-8')))
+        r = requests.session().post(API_URL + "users/", json=bodyToJson(request.body.decode('utf-8')))
         if r.status_code == 200:
             request.session['token'] = json.loads(r.content.decode('utf-8'))["token"]
             if isAdmin(request):
-                return HttpResponseRedirect('/admin/')
+                response = HttpResponseRedirect('/admin/')
             else:
-                return HttpResponseRedirect('/applications/')
+                response = HttpResponseRedirect('/applications/')
+            response.set_cookie('token', json.loads(r.content.decode('utf-8'))["token"])
+            return response
         else:
             request.session['message'] = "User not found"
             return HttpResponseRedirect('/login/')

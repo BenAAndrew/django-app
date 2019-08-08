@@ -2,14 +2,15 @@ import requests
 import json
 
 
-class RequestsHandler():
+class RequestsHandler:
     def __init__(self):
         self.r = requests.session()
-        self.cookies = dict()
 
-    def set_cookie(self, key, value):
-        self.cookies[key] = value
+    def get(self, url, cookies):
+        requests.session().cookies["abc"] = "123"
+        req = self.r.get(url, cookies=cookies)
+        return json.loads(req.content.decode('utf-8'))
 
-    def get(self):
-        req = self.r.get('http://127.0.0.1:8001/applications/', cookies=self.cookies)
-        print(json.loads(req.content.decode('utf-8')))
+    def post(self, url, data, cookies):
+        req = self.r.get(url, data=data, cookies=cookies)
+        return json.loads(req.content.decode('utf-8'))
