@@ -38,7 +38,8 @@ class ApplicationView(GenericAPIView):
     @swagger_auto_schema(operation_description="Fetch an application of given ID")
     def get(self, request, application_id):
         try:
-            application = Application.objects.get(pk=application_id)
+            user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            application = Application.objects.get(pk=application_id, user=user_id)
             serializer = ApplicationSerializer(application, many=False)
             return JsonResponse(serializer.data, safe=False)
         except Application.DoesNotExist:
@@ -46,7 +47,8 @@ class ApplicationView(GenericAPIView):
 
     def put(self, request, application_id):
         try:
-            application = Application.objects.get(pk=application_id)
+            user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            application = Application.objects.get(pk=application_id, user=user_id)
             data = json.loads(request.body)
             data["user"] = tokenHandler.get_user_id_token(data["token"])
             serializer = ApplicationSerializer(application, data=data)
@@ -59,7 +61,8 @@ class ApplicationView(GenericAPIView):
 
     def delete(self, request, application_id):
         try:
-            application = Application.objects.get(pk=application_id)
+            user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            application = Application.objects.get(pk=application_id, user=user_id)
             application.delete()
             return HttpResponse(status=204)
         except Application.DoesNotExist:
@@ -81,7 +84,8 @@ class ApplicationProgressView(GenericAPIView):
 
     def get(self, request, application_id, new_progress):
         try:
-            application = Application.objects.get(pk=application_id)
+            user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            application = Application.objects.get(pk=application_id, user=user_id)
             print(application.progress + " => " + new_progress)
             if self.check_progress_update(new_progress, application.progress):
                 application.progress = new_progress

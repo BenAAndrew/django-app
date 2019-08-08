@@ -21,7 +21,7 @@ def getApplications(request):
     return applications
 
 def getApplication(id, request):
-    application = jsonToDict('http://127.0.0.1:8001/applications/'+str(id)+"/")
+    application = decode_request(requests.get('http://127.0.0.1:8001/applications/'+str(id)+"/", cookies=request.COOKIES))
     application["goods"] = getGoodsNames(application["goods"], request)
     application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
     return application
@@ -43,7 +43,7 @@ def createApplication(request):
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
         data["token"] = request.session["token"]
-        r = requests.post(API_URL+"applications/", json=data)
+        r = requests.post(API_URL+"applications/", json=data, cookies=request.COOKIES)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/create/')
@@ -61,7 +61,7 @@ def editApplication(request, application_id):
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
         data["token"] = request.session["token"]
-        r = requests.put(API_URL+"applications/"+str(application_id)+"/", json=data)
+        r = requests.put(API_URL+"applications/"+str(application_id)+"/", json=data, cookies=request.COOKIES)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/edit/'+str(application_id)+"/")
@@ -75,13 +75,13 @@ def viewApplication(request, application_id):
 
 @check_is_user
 def deleteApplication(request, application_id):
-    r = requests.delete(API_URL+"applications/" + str(application_id) + "/")
+    r = requests.delete(API_URL+"applications/" + str(application_id) + "/", cookies=request.COOKIES)
     request.session['message'] = "Successfully deleted an application"
     return HttpResponseRedirect('/applications/')
 
 @check_is_user
 def submitApplication(request, application_id):
-    r = requests.get(API_URL + "applications/progress/submitted/" + str(application_id) + "/")
+    r = requests.get(API_URL + "applications/progress/submitted/" + str(application_id) + "/", cookies=request.COOKIES)
     if r.status_code == 400:
         request.session['message'] = "Error occurred submitting an application"
     else:
