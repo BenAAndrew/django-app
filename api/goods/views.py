@@ -4,7 +4,9 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import JSONParser
 from .models import Good
 from .serializers import GoodSerializer
+from users.views import TokenHandler
 
+tokenHandler = TokenHandler()
 
 class GoodsView(GenericAPIView):
     serializer_class = GoodSerializer
@@ -18,6 +20,7 @@ class GoodsView(GenericAPIView):
 
     def post(self, request):
         data = json.loads(request.body)
+        data["user"] = tokenHandler.get_user_id_token(data["token"])
         serializer = GoodSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -42,6 +45,7 @@ class GoodView(GenericAPIView):
         try:
             good = Good.objects.get(pk=good_id)
             data = JSONParser().parse(request)
+            data["user"] = tokenHandler.get_user_id_token(data["token"])
             serializer = GoodSerializer(good, data=data)
             if serializer.is_valid():
                 serializer.save()
