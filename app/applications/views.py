@@ -18,8 +18,9 @@ def createApplication(request):
         else:
             return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
     elif request.method == "POST":
-        print(bodyToJson(request.body.decode('utf-8')))
-        r = requests.post(API_URL+"applications/", json=bodyToJson(request.body.decode('utf-8')))
+        data = bodyToJson(request.body.decode('utf-8'))
+        data["token"] = request.session["token"]
+        r = requests.post(API_URL+"applications/", json=data)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/create/')
@@ -35,7 +36,9 @@ def editApplication(request, application_id):
         else:
             return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id) })
     elif request.method == "POST":
-        r = requests.put(API_URL+"applications/"+str(application_id)+"/", json=bodyToJson(request.body.decode('utf-8')))
+        data = bodyToJson(request.body.decode('utf-8'))
+        data["token"] = request.session["token"]
+        r = requests.put(API_URL+"applications/"+str(application_id)+"/", json=data)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/edit/'+str(application_id)+"/")
