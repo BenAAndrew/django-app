@@ -15,6 +15,7 @@ class ApplicationsView(GenericAPIView):
 
     @swagger_auto_schema(operation_description="Get all applications")
     def get(self, request):
+        print(request.COOKIES)
         applications = Application.objects.all()
         serializer = ApplicationSerializer(applications, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)

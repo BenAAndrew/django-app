@@ -1,8 +1,10 @@
 import requests
 import json
 from urllib.parse import unquote
+from app.requestsHandler import RequestsHandler
 
 API_URL = "http://127.0.0.1:8001/"
+requestsHandler = RequestsHandler()
 
 def decode(value):
     while "+" in value:

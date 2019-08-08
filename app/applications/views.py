@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from app.dataHandler import *
+from app.tools import requestsHandler
 from app.userChecks import check_is_user, isAdmin
 from django.http import HttpResponseRedirect
 
+
 @check_is_user
 def index(request):
+    requestsHandler.set_cookie('duck','yes')
+    requestsHandler.get()
     if "message" in request.session:
         return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications(), "message" : getMessage(request)})
     else:
