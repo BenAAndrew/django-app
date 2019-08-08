@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',
-    'rest_framework_swagger',
+    'drf_yasg',
     'applications.apps.ApplicationsConfig',
     'goods.apps.GoodsConfig',
     'users.apps.UsersConfig',
@@ -52,10 +52,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
-}
 
 ROOT_URLCONF = 'api.urls'
 

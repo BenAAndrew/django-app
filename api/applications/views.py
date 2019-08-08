@@ -4,13 +4,15 @@ from rest_framework.parsers import JSONParser
 from rest_framework.generics import GenericAPIView
 from .models import Application, Good
 from .serializers import ApplicationSerializer
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class ApplicationsView(GenericAPIView):
     serializer_class = ApplicationSerializer
     model = Application
     queryset = Application.objects.all()
 
+    @swagger_auto_schema(operation_description="Get all applications")
     def get(self, request):
         applications = Application.objects.all()
         serializer = ApplicationSerializer(applications, many=True)
@@ -30,6 +32,7 @@ class ApplicationView(GenericAPIView):
     model = Application
     queryset = Application.objects.all()
 
+    @swagger_auto_schema(operation_description="Fetch an application of given ID")
     def get(self, request, application_id):
         try:
             application = Application.objects.get(pk=application_id)
