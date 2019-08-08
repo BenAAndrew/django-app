@@ -1,10 +1,8 @@
 import requests
 import json
 from urllib.parse import unquote
-from app.requestsHandler import RequestsHandler
 
 API_URL = "http://127.0.0.1:8001/"
-requestsHandler = RequestsHandler()
 
 def decode(value):
     while "+" in value:
@@ -27,12 +25,17 @@ def bodyToJson(body):
             data[name] = value
     return data
 
-def jsonToDict(url):
-    r = requests.get(url)
-    return json.loads(r.content.decode('utf-8'))
+
+def decode_request(request):
+    return json.loads(request.content.decode('utf-8'))
 
 def handleErrorResponse(error):
     message = ""
     for key in error:
         message += key + ": " + error[key][0]
+    return message
+
+def getMessage(request):
+    message = request.session["message"]
+    request.session["message"] = None
     return message
