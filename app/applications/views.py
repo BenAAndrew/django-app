@@ -15,9 +15,9 @@ def index(request):
 def createApplication(request):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods" : getGoods(), "error": getMessage(request)})
+            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods" : getGoods(request), "error": getMessage(request)})
         else:
-            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods()})
+            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods(request)})
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
         data["token"] = request.session["token"]

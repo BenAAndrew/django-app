@@ -6,12 +6,12 @@ from django.http import HttpResponseRedirect
 
 @check_is_admin
 def index(request):
-    return render(request, 'admin.html', {"isAdmin" : isAdmin(request), "applications": getApplications()})
+    return render(request, 'admin.html', {"isAdmin" : isAdmin(request), "applications": getApplications(request)})
 
 
 @check_is_admin
 def review(request, application_id):
-    return render(request, 'reviewApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id)})
+    return render(request, 'reviewApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id, request)})
 
 
 @check_is_admin

@@ -27,7 +27,7 @@ def getGoodsSelected(ids, request):
 
 def getApplication(id, request):
     application = jsonToDict('http://127.0.0.1:8001/applications/'+str(id)+"/")
-    application["goods"] = getGoodsNames(application["goods"])
+    application["goods"] = getGoodsNames(application["goods"], request)
     application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
     return application
 
