@@ -1,6 +1,6 @@
 import json
 from django.http import JsonResponse, HttpResponse
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import JSONParser
 from .models import Good
 from .serializers import GoodSerializer
@@ -8,7 +8,7 @@ from users.views import TokenHandler
 
 tokenHandler = TokenHandler()
 
-class GoodsView(GenericAPIView):
+class GoodsView(ListCreateAPIView):
     serializer_class = GoodSerializer
     model = Good
     queryset = Good.objects.all()
@@ -29,7 +29,7 @@ class GoodsView(GenericAPIView):
         return JsonResponse(serializer.errors, status=400)
 
 
-class GoodView(GenericAPIView):
+class GoodView(RetrieveUpdateDestroyAPIView):
     serializer_class = GoodSerializer
     model = Good
     queryset = Good.objects.all()
