@@ -4,7 +4,7 @@ from app.userChecks import check_is_user, isAdmin
 from app.tools import *
 
 def getGoods(request):
-    return decode_request(requests.get("http://127.0.0.1:8001/goods/", cookies=request.COOKIES))
+    return decode_request(requests.get(API_URL+"goods/", cookies=request.COOKIES))
 
 def getGoodsSelected(ids, request):
     allGoods = getGoods(request)
@@ -13,7 +13,7 @@ def getGoodsSelected(ids, request):
     return allGoods
 
 def getGood(id, request):
-    return decode_request(requests.get('http://127.0.0.1:8001/goods/'+str(id)+"/", cookies=request.COOKIES))
+    return decode_request(requests.get(API_URL+'goods/'+str(id)+"/", cookies=request.COOKIES))
 
 def getGoodsNames(ids, request):
     goods = list()
@@ -23,22 +23,21 @@ def getGoodsNames(ids, request):
 
 @check_is_user
 def index(request):
+    data = {"isAdmin" : isAdmin(request), "goods": getGoods(request)}
     if "message" in request.session:
-        return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods(request), "message": getMessage(request)})
-    else:
-        return render(request, 'viewGoods.html', {"isAdmin" : isAdmin(request), "goods": getGoods(request)})
+        data["message"] = getMessage(request)
+    return render(request, 'viewGoods.html', data)
 
 
 @check_is_user
 def createGood(request):
     if request.method == "GET":
+        data = {"isAdmin" : isAdmin(request)}
         if "message" in request.session:
-            return render(request, 'createGood.html', {"isAdmin" : isAdmin(request), "error": getMessage(request)})
-        else:
-            return render(request, 'createGood.html', {"isAdmin" : isAdmin(request)})
+            data["error"] = getMessage(request)
+        return render(request, 'createGood.html', data)
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
-        data["token"] = request.session["token"]
         r = requests.post(API_URL+"goods/", json=data, cookies=request.COOKIES)
         if r.status_code == 400:
             request.session["message"] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
@@ -51,14 +50,13 @@ def createGood(request):
 @check_is_user
 def editGood(request, good_id):
     if request.method == "GET":
+        data = {"isAdmin": isAdmin(request), "good": getGood(good_id, request)}
         if "message" in request.session:
-            return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id, request), "error": getMessage(request)})
-        else:
-            return render(request, 'editGood.html', {"isAdmin" : isAdmin(request), "good": getGood(good_id, request)})
+            data["error"] = getMessage(request)
+        return render(request, 'editGood.html', data)
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
-        data["token"] = request.session["token"]
-        r = requests.put(API_URL+"goods/" + str(good_id) + "/", json=data, cookies=request.COOKIES)
+        r = requests.put(API_URL+"goods/"+str(good_id)+"/", json=data, cookies=request.COOKIES)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/edit/'+str(good_id)+"/")

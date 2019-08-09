@@ -14,35 +14,34 @@ def progressToProgressPercent(application):
         return (progress.index(state)+1) * 25
 
 def getApplications(request):
-    applications = decode_request(requests.get("http://127.0.0.1:8001/applications/", cookies=request.COOKIES))
+    applications = decode_request(requests.get(API_URL+"applications/", cookies=request.COOKIES))
     for i in range(0, len(applications)):
         applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
         applications[i]["progress"] = applications[i]["progress"].capitalize()
     return applications
 
 def getApplication(id, request):
-    application = decode_request(requests.get('http://127.0.0.1:8001/applications/'+str(id)+"/", cookies=request.COOKIES))
+    application = decode_request(requests.get(API_URL+'applications/'+str(id)+"/", cookies=request.COOKIES))
     application["goods"] = getGoodsNames(application["goods"], request)
     application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
     return application
 
 @check_is_user
 def index(request):
+    data = {"isAdmin" : isAdmin(request), "applications": getApplications(request)}
     if "message" in request.session:
-        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications(request), "message" : getMessage(request)})
-    else:
-        return render(request, 'index.html', {"isAdmin" : isAdmin(request), "applications": getApplications(request)})
+        data["message"] = getMessage(request)
+    return render(request, 'index.html', data)
 
 @check_is_user
 def createApplication(request):
     if request.method == "GET":
+        data = {"isAdmin" : isAdmin(request), "goods" : getGoods(request)}
         if "message" in request.session:
-            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods" : getGoods(request), "error": getMessage(request)})
-        else:
-            return render(request, 'createApplication.html', {"isAdmin" : isAdmin(request), "goods": getGoods(request)})
+            data["error"] = getMessage(request)
+        return render(request, 'createApplication.html', data)
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
-        data["token"] = request.session["token"]
         r = requests.post(API_URL+"applications/", json=data, cookies=request.COOKIES)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
@@ -54,13 +53,12 @@ def createApplication(request):
 @check_is_user
 def editApplication(request, application_id):
     if request.method == "GET":
+        data = {"isAdmin" : isAdmin(request), "application": getApplication(application_id, request)}
         if "message" in request.session:
-            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application" : getApplication(application_id, request), "error": getMessage(request)})
-        else:
-            return render(request, 'editApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id) })
+            data["error"] = getMessage(request)
+        return render(request, 'editApplication.html', data)
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
-        data["token"] = request.session["token"]
         r = requests.put(API_URL+"applications/"+str(application_id)+"/", json=data, cookies=request.COOKIES)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
