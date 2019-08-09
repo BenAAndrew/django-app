@@ -1,14 +1,14 @@
 import json
 from django.http import HttpResponse, JsonResponse
-from rest_framework.generics import GenericAPIView
-from .models import Application, Good
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
+from .models import Application
 from .serializers import ApplicationSerializer
 from drf_yasg.utils import swagger_auto_schema
 from users.views import TokenHandler
 
 tokenHandler = TokenHandler()
 
-class ApplicationsView(GenericAPIView):
+class ApplicationsView(ListCreateAPIView):
     serializer_class = ApplicationSerializer
     model = Application
     queryset = Application.objects.all()
@@ -30,7 +30,7 @@ class ApplicationsView(GenericAPIView):
         return JsonResponse(serializer.errors, status=400)
 
 
-class ApplicationView(GenericAPIView):
+class ApplicationView(RetrieveUpdateDestroyAPIView):
     serializer_class = ApplicationSerializer
     model = Application
     queryset = Application.objects.all()
@@ -69,7 +69,7 @@ class ApplicationView(GenericAPIView):
             return HttpResponse(status=404)
 
 
-class ApplicationProgressView(GenericAPIView):
+class ApplicationProgressView(RetrieveAPIView):
     serializer_class = ApplicationSerializer
     model = Application
     queryset = Application.objects.all()

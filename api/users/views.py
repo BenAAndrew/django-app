@@ -3,7 +3,7 @@ from jwt import (
     JWT,
     jwk_from_dict,
 )
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import CreateAPIView
 from .models import User
 from .serializers import UserSerializer
 from django.contrib.auth import authenticate
@@ -39,7 +39,7 @@ class TokenHandler:
 tokenHandler = TokenHandler()
 
 
-class LoginView(GenericAPIView):
+class LoginView(CreateAPIView):
     serializer_class = UserSerializer
     model = User
 
@@ -54,7 +54,7 @@ class LoginView(GenericAPIView):
             return HttpResponse(status=400)
 
 
-class CreateUserView(GenericAPIView):
+class CreateUserView(CreateAPIView):
     serializer_class = UserSerializer
     model = User
 
