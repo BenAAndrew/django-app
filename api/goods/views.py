@@ -21,7 +21,7 @@ class GoodsView(ListCreateAPIView):
 
     def post(self, request):
         data = json.loads(request.body)
-        data["user"] = tokenHandler.get_user_id_token(data["token"])
+        data["user"] = tokenHandler.get_user_id_token(request.COOKIES["token"])
         serializer = GoodSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
