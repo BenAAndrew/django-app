@@ -3,6 +3,7 @@ from app.userChecks import check_is_user, isAdmin
 from django.http import HttpResponseRedirect
 from goods.views import getGoods, getGoodsNames, getGoodsSelected
 from app.tools import *
+from app.apiRequest import get_request, post_request, put_request, delete_request
 
 progress = ['draft', 'submitted', 'processing', 'approved']
 
@@ -14,14 +15,14 @@ def progressToProgressPercent(application):
         return (progress.index(state)+1) * 25
 
 def getApplications(request):
-    applications = decode_request(requests.get(API_URL+"applications/", cookies=request.COOKIES))
+    applications = get_request(request, "applications", data_only=True)
     for i in range(0, len(applications)):
         applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
         applications[i]["progress"] = applications[i]["progress"].capitalize()
     return applications
 
 def getApplication(id, request):
-    application = decode_request(requests.get(API_URL+'applications/'+str(id)+"/", cookies=request.COOKIES))
+    application = get_request(request, "applications", url_extension=str(id)+"/", data_only=True)
     application["goods"] = getGoodsNames(application["goods"], request)
     application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
     return application
@@ -42,7 +43,7 @@ def createApplication(request):
         return render(request, 'createApplication.html', data)
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
-        r = requests.post(API_URL+"applications/", json=data, cookies=request.COOKIES)
+        r = post_request(request, "applications", data)
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/create/')
@@ -59,7 +60,7 @@ def editApplication(request, application_id):
         return render(request, 'editApplication.html', data)
     elif request.method == "POST":
         data = bodyToJson(request.body.decode('utf-8'))
-        r = requests.put(API_URL+"applications/"+str(application_id)+"/", json=data, cookies=request.COOKIES)
+        r = put_request(request, "applications", data, url_extension=str(application_id)+"/")
         if r.status_code == 400:
             request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/edit/'+str(application_id)+"/")
@@ -73,13 +74,13 @@ def viewApplication(request, application_id):
 
 @check_is_user
 def deleteApplication(request, application_id):
-    r = requests.delete(API_URL+"applications/" + str(application_id) + "/", cookies=request.COOKIES)
+    r = delete_request(request, "applications", url_extension=str(application_id)+"/")
     request.session['message'] = "Successfully deleted an application"
     return HttpResponseRedirect('/applications/')
 
 @check_is_user
 def submitApplication(request, application_id):
-    r = requests.get(API_URL + "applications/progress/submitted/" + str(application_id) + "/", cookies=request.COOKIES)
+    r = get_request(request, "submit", url_extension=str(application_id)+"/")
     if r.status_code == 400:
         request.session['message'] = "Error occurred submitting an application"
     else:
