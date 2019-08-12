@@ -3,20 +3,21 @@ from app.userChecks import check_is_admin, isAdmin
 from django.http import HttpResponseRedirect
 from applications.views import progressToProgressPercent
 from app.tools import *
+from app.apiRequest import get_request
 
 
 def getApplications(request):
-    applications = decode_request(requests.get(API_URL+"admin/", cookies=request.COOKIES))
+    applications = get_request(request, "admin", data_only=True)
     for i in range(0, len(applications)):
         applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
         applications[i]["progress"] = applications[i]["progress"].capitalize()
     return applications
 
 def getGoods(request):
-    return decode_request(requests.get(API_URL+"admin/goods/", cookies=request.COOKIES))
+    return get_request(request, "admin_goods", data_only=True)
 
 def getGood(id, request):
-    return decode_request(requests.get(API_URL+'admin/goods/'+str(id)+"/", cookies=request.COOKIES))
+    return get_request(request, "admin_goods", url_extension=str(id)+"/", data_only=True)
 
 def getGoodsNames(ids, request):
     goods = list()
@@ -31,7 +32,7 @@ def getGoodsSelected(ids, request):
     return allGoods
 
 def getApplication(id, request):
-    application = decode_request(requests.get(API_URL+'admin/'+str(id)+"/", cookies=request.COOKIES))
+    application = get_request(request, "admin", url_extension=str(id)+"/", data_only=True)
     application["goods"] = getGoodsNames(application["goods"], request)
     application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
     return application
@@ -48,7 +49,7 @@ def review(request, application_id):
 
 @check_is_admin
 def accept(request, application_id):
-    r = requests.get(API_URL + "applications/progress/approved/" + str(application_id) + "/")
+    r = get_request(request, "approve", url_extension=str(application_id)+"/")
     if r.status_code == 400:
         request.session['message'] = "Error occurred when accepting application"
     else:
@@ -58,7 +59,7 @@ def accept(request, application_id):
 
 @check_is_admin
 def reject(request, application_id):
-    r = requests.get(API_URL + "applications/progress/declined/" + str(application_id) + "/")
+    r = get_request(request, "decline", url_extension=str(application_id) + "/")
     if r.status_code == 400:
         request.session['message'] = "Error occurred when rejecting application"
     else:
