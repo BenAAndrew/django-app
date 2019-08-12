@@ -1,1 +1,1 @@
-# django test project
+# django test project 2
