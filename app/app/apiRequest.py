@@ -5,7 +5,8 @@ API_URL = "http://127.0.0.1:8001/"
 
 endpoints = {
                 "applications": "applications/",
-                "submit": "applications/progress/submitted/"
+                "submit": "applications/progress/submitted/",
+                "goods": "goods/"
             }
 
 
