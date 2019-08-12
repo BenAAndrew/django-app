@@ -48,7 +48,7 @@ class GoodView(RetrieveUpdateDestroyAPIView):
             user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
             good = Good.objects.get(pk=good_id, user=user_id)
             data = JSONParser().parse(request)
-            data["user"] = tokenHandler.get_user_id_token(data["token"])
+            data["user"] = user_id
             serializer = GoodSerializer(good, data=data)
             if serializer.is_valid():
                 serializer.save()

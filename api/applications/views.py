@@ -50,7 +50,7 @@ class ApplicationView(RetrieveUpdateDestroyAPIView):
             user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
             application = Application.objects.get(pk=application_id, user=user_id)
             data = json.loads(request.body)
-            data["user"] = tokenHandler.get_user_id_token(data["token"])
+            data["user"] = tokenHandler.get_user_id_token(request.COOKIES["token"])
             serializer = ApplicationSerializer(application, data=data)
             if serializer.is_valid():
                 serializer.save()
