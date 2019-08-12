@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from app.tools import form_body_to_json, get_message
+from app.tools import form_body_to_json, get_message, get_error
 from django.http import HttpResponseRedirect
 from app.userChecks import is_admin
 from app.apiRequest import post_request
@@ -8,7 +8,9 @@ import json
 def index(request):
     if request.method == "GET":
         if "message" in request.session:
-            return render(request, 'login.html', {"error" : get_message(request)})
+            return render(request, 'login.html', {"message": get_message(request)})
+        elif "error" in request.session:
+            return render(request, 'login.html', {"error": get_error(request)})
         else:
             return render(request, 'login.html')
     elif request.method == "POST":
@@ -23,7 +25,7 @@ def index(request):
             response.set_cookie('token', json.loads(r.content.decode('utf-8'))["token"])
             return response
         else:
-            request.session['message'] = "User not found"
+            request.session['error'] = "User not found"
             return HttpResponseRedirect('/login/')
 
 def create(request):
@@ -32,7 +34,8 @@ def create(request):
     elif request.method == "POST":
         data = form_body_to_json(request.body.decode('utf-8'))
         r = post_request(request, "create_account", data)
-        return HttpResponseRedirect('/login/create/')
+        request.session['message'] = "User created"
+        return HttpResponseRedirect('/login/')
 
 def logout(request):
     request.session['token'] = None

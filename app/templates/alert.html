@@ -2,9 +2,10 @@
     <div class="alert blue" id="message">
     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
     {{ message }}
+    </div>
 {% elif error %}
    <div class="alert red" id="error">
    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
    {{ error }}
+    </div>
 {% endif %}
-</div>
