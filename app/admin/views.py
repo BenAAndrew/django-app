@@ -1,50 +1,52 @@
 from django.shortcuts import render
-from app.userChecks import check_is_admin, isAdmin
+from app.userChecks import check_is_admin, is_admin
 from django.http import HttpResponseRedirect
-from applications.views import progressToProgressPercent
-from app.tools import *
+from applications.views import add_progress_to_applications
 from app.apiRequest import get_request
 
 
-def getApplications(request):
+def get_admin_applications(request):
     applications = get_request(request, "admin", data_only=True)
-    for i in range(0, len(applications)):
-        applications[i]["progress_percent"] = progressToProgressPercent(applications[i])
-        applications[i]["progress"] = applications[i]["progress"].capitalize()
-    return applications
+    return add_progress_to_applications(applications)
 
-def getGoods(request):
+
+def get_admin_goods(request):
     return get_request(request, "admin_goods", data_only=True)
 
-def getGood(id, request):
+
+def get_admin_good(id, request):
     return get_request(request, "admin_goods", url_extension=str(id)+"/", data_only=True)
 
-def getGoodsNames(ids, request):
+
+def get_admin_goods_names(ids, request):
     goods = list()
     for id in ids:
-        goods.append({ "id": int(id), "name" : getGood(int(id), request)["name"]})
+        goods.append({"id": int(id), "name" : get_admin_good(int(id), request)["name"]})
     return goods
 
-def getGoodsSelected(ids, request):
-    allGoods = getGoods(request)
+
+def get_selected_goods(ids, request):
+    allGoods = get_admin_goods(request)
     for i in range(0, len(allGoods)):
         allGoods[i]["selected"] = allGoods[i]["id"] in ids
     return allGoods
 
-def getApplication(id, request):
+
+def get_admin_application(id, request):
     application = get_request(request, "admin", url_extension=str(id)+"/", data_only=True)
-    application["goods"] = getGoodsNames(application["goods"], request)
-    application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
+    application["goods"] = get_admin_goods_names(application["goods"], request)
+    application["goods"] = get_selected_goods([good["id"] for good in application["goods"]], request)
     return application
+
 
 @check_is_admin
 def index(request):
-    return render(request, 'admin.html', {"isAdmin" : isAdmin(request), "applications": getApplications(request)})
+    return render(request, 'admin.html', {"isAdmin" : is_admin(request), "applications": get_admin_applications(request)})
 
 
 @check_is_admin
 def review(request, application_id):
-    return render(request, 'reviewApplication.html', {"isAdmin" : isAdmin(request), "application": getApplication(application_id, request)})
+    return render(request, 'reviewApplication.html', {"isAdmin" : is_admin(request), "application": get_admin_application(application_id, request)})
 
 
 @check_is_admin
