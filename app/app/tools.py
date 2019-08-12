@@ -38,5 +38,11 @@ def handle_error_response(error):
 
 def get_message(request):
     message = request.session["message"]
-    request.session["message"] = None
+    del request.session["message"]
     return message
+
+
+def get_error(request):
+    error = request.session["error"]
+    del request.session["error"]
+    return error
