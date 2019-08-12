@@ -1,4 +1,3 @@
-from django.shortcuts import render
 import json
 from jwt import (
     JWT,
@@ -6,49 +5,52 @@ from jwt import (
 )
 from django.http import HttpResponseRedirect
 
-jwt = JWT()
 
-def getKey():
+def get_key():
     with open('key.json', 'r') as fh:
         return jwk_from_dict(json.load(fh))
 
 
-def decodeToken(request):
+jwt = JWT()
+key = get_key()
+
+
+def decode_token(request):
     try:
         encoded = request.session["token"]
-        return jwt.decode(encoded, getKey(), 'RS256')
+        return jwt.decode(encoded, key, 'RS256')
     except:
         return None
 
 
-def redirectToLogin(request):
+def redirect_to_login(request):
     request.session['message'] = "You must login first"
     return HttpResponseRedirect('/login/')
 
 
-def redirectToHome(request):
+def redirect_to_home(request):
     request.session['message'] = "You do not have rights to access that page"
     return HttpResponseRedirect('/applications/')
 
 
-def isAdmin(request):
-    token = decodeToken(request)
+def is_admin(request):
+    token = decode_token(request)
     return token is not None and token["admin"]
 
 
 def check_is_admin(input_func):
     def check(*args, **kwargs):
-        if isAdmin(*args):
+        if is_admin(*args):
             return input_func(*args, **kwargs)
         else:
-            return redirectToHome(*args)
+            return redirect_to_home(*args)
     return check
 
 
 def check_is_user(input_func):
     def check(*args, **kwargs):
-        if decodeToken(*args) is not None:
+        if decode_token(*args) is not None:
             return input_func(*args, **kwargs)
         else:
-            return redirectToLogin(*args)
+            return redirect_to_login(*args)
     return check
