@@ -10,33 +10,21 @@ def get_admin_applications(request):
     return add_progress_to_applications(applications)
 
 
-def get_admin_goods(request):
-    return get_request(request, "admin_goods", data_only=True)
-
-
-def get_admin_good(id, request):
-    return get_request(request, "admin_goods", url_extension=str(id)+"/", data_only=True)
-
-
-def get_admin_goods_names(ids, request):
-    goods = list()
-    for id in ids:
-        goods.append({"id": int(id), "name" : get_admin_good(int(id), request)["name"]})
-    return goods
-
-
-def get_selected_goods(ids, request):
-    allGoods = get_admin_goods(request)
-    for i in range(0, len(allGoods)):
-        allGoods[i]["selected"] = allGoods[i]["id"] in ids
-    return allGoods
-
-
 def get_admin_application(id, request):
     application = get_request(request, "admin", url_extension=str(id)+"/", data_only=True)
-    application["goods"] = get_admin_goods_names(application["goods"], request)
-    application["goods"] = get_selected_goods([good["id"] for good in application["goods"]], request)
+    application["goods"] = get_admin_goods(request, application)
     return application
+
+
+def get_admin_goods(request, application):
+    ids = application["goods"]
+    print(ids)
+    goods = get_request(request, "admin_goods", data_only=True)
+    final = list()
+    for i in range(0, len(goods)):
+        if goods[i]["id"] in ids:
+            final.append(goods[i])
+    return final
 
 
 @check_is_admin
