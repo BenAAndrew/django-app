@@ -1,16 +1,16 @@
 from django.shortcuts import render
-from app.tools import form_body_to_json, get_message, get_error
+from app.tools import form_body_to_json, get_message_or_error
 from django.http import HttpResponseRedirect
 from app.userChecks import is_admin
 from app.apiRequest import post_request
 import json
 
+
 def index(request):
     if request.method == "GET":
-        if "message" in request.session:
-            return render(request, 'login.html', {"message": get_message(request)})
-        elif "error" in request.session:
-            return render(request, 'login.html', {"error": get_error(request)})
+        msg = get_message_or_error(request)
+        if msg:
+            return render(request, 'login.html', msg)
         else:
             return render(request, 'login.html')
     elif request.method == "POST":
@@ -28,6 +28,7 @@ def index(request):
             request.session['error'] = "User not found"
             return HttpResponseRedirect('/login/')
 
+
 def create(request):
     if request.method == "GET":
         return render(request, 'createuser.html')
@@ -36,6 +37,7 @@ def create(request):
         r = post_request(request, "create_account", data)
         request.session['message'] = "User created"
         return HttpResponseRedirect('/login/')
+
 
 def logout(request):
     request.session['token'] = None

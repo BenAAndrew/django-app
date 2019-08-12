@@ -46,3 +46,11 @@ def get_error(request):
     error = request.session["error"]
     del request.session["error"]
     return error
+
+
+def get_message_or_error(request):
+    if "message" in request.session:
+        return {"message": get_message(request)}
+    elif "error" in request.session:
+        return {"error": get_error(request)}
+    return None
