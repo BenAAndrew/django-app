@@ -27,7 +27,7 @@ def getGoodsNames(ids, request):
 def index(request):
     data = {"isAdmin" : isAdmin(request), "goods": getGoods(request)}
     if "message" in request.session:
-        data["message"] = getMessage(request)
+        data["message"] = get_message(request)
     return render(request, 'viewGoods.html', data)
 
 
@@ -36,13 +36,13 @@ def createGood(request):
     if request.method == "GET":
         data = {"isAdmin" : isAdmin(request)}
         if "message" in request.session:
-            data["error"] = getMessage(request)
+            data["error"] = get_message(request)
         return render(request, 'createGood.html', data)
     elif request.method == "POST":
-        data = bodyToJson(request.body.decode('utf-8'))
+        data = form_body_to_json(request.body.decode('utf-8'))
         r = post_request(request, "goods", data)
         if r.status_code == 400:
-            request.session["message"] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            request.session["message"] = handle_error_response(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/create/')
         else:
             request.session['message'] = "Successfully created a good"
@@ -54,13 +54,13 @@ def editGood(request, good_id):
     if request.method == "GET":
         data = {"isAdmin": isAdmin(request), "good": getGood(good_id, request)}
         if "message" in request.session:
-            data["error"] = getMessage(request)
+            data["error"] = get_message(request)
         return render(request, 'editGood.html', data)
     elif request.method == "POST":
-        data = bodyToJson(request.body.decode('utf-8'))
+        data = form_body_to_json(request.body.decode('utf-8'))
         r = put_request(request, "goods", data, url_extension=str(good_id)+"/")
         if r.status_code == 400:
-            request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            request.session['message'] = handle_error_response(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/edit/'+str(good_id)+"/")
         else:
             request.session['message'] = "Successfully edited a good"

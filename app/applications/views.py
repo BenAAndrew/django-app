@@ -31,7 +31,7 @@ def getApplication(id, request):
 def index(request):
     data = {"isAdmin" : isAdmin(request), "applications": getApplications(request)}
     if "message" in request.session:
-        data["message"] = getMessage(request)
+        data["message"] = get_message(request)
     return render(request, 'index.html', data)
 
 @check_is_user
@@ -39,13 +39,13 @@ def createApplication(request):
     if request.method == "GET":
         data = {"isAdmin" : isAdmin(request), "goods" : getGoods(request)}
         if "message" in request.session:
-            data["error"] = getMessage(request)
+            data["error"] = get_message(request)
         return render(request, 'createApplication.html', data)
     elif request.method == "POST":
-        data = bodyToJson(request.body.decode('utf-8'))
+        data = form_body_to_json(request.body.decode('utf-8'))
         r = post_request(request, "applications", data)
         if r.status_code == 400:
-            request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            request.session['message'] = handle_error_response(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/create/')
         else:
             request.session['message'] = "Successfully created an application"
@@ -56,13 +56,13 @@ def editApplication(request, application_id):
     if request.method == "GET":
         data = {"isAdmin" : isAdmin(request), "application": getApplication(application_id, request)}
         if "message" in request.session:
-            data["error"] = getMessage(request)
+            data["error"] = get_message(request)
         return render(request, 'editApplication.html', data)
     elif request.method == "POST":
-        data = bodyToJson(request.body.decode('utf-8'))
+        data = form_body_to_json(request.body.decode('utf-8'))
         r = put_request(request, "applications", data, url_extension=str(application_id)+"/")
         if r.status_code == 400:
-            request.session['message'] = handleErrorResponse(json.loads(r.content.decode('utf-8')))
+            request.session['message'] = handle_error_response(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/applications/edit/'+str(application_id)+"/")
         else:
             request.session['message'] = "Successfully edited an application"

@@ -1,15 +1,14 @@
-import requests
 import json
 from urllib.parse import unquote
 
-API_URL = "http://127.0.0.1:8001/"
 
 def decode(value):
     while "+" in value:
         value = value.replace("+"," ")
     return unquote(value)
 
-def bodyToJson(body):
+
+def form_body_to_json(body):
     elements = body.split("&")
     data = dict()
     for element in elements:
@@ -29,13 +28,15 @@ def bodyToJson(body):
 def decode_request(request):
     return json.loads(request.content.decode('utf-8'))
 
-def handleErrorResponse(error):
+
+def handle_error_response(error):
     message = ""
     for key in error:
         message += key + ": " + error[key][0]
     return message
 
-def getMessage(request):
+
+def get_message(request):
     message = request.session["message"]
     request.session["message"] = None
     return message

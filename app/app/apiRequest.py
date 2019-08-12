@@ -10,7 +10,9 @@ endpoints = {
                 "admin": "admin/",
                 "admin_goods": "admin/goods/",
                 "approve": "applications/progress/approved/",
-                "decline": "applications/progress/declined/"
+                "decline": "applications/progress/declined/",
+                "users": "users/",
+                "create_account": "users/create/"
             }
 
 
