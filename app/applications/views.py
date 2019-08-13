@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from app.userChecks import check_is_user, is_admin
 from django.http import HttpResponseRedirect
-from goods.views import getGoods, getGoodsNames, getGoodsSelected
-from app.tools import form_body_to_json, handle_error_response, get_message
+from goods.views import get_goods, get_goods_names, get_selected_goods
+from app.tools import form_body_to_json, handle_error_response, get_message, get_message_or_error
 from app.apiRequest import get_request, post_request, put_request, delete_request
+
 
 progress = ['draft', 'submitted', 'processing', 'approved']
 
@@ -19,7 +20,6 @@ def progress_to_progress_percent(application):
 def add_progress_to_applications(applications):
     for i in range(0, len(applications)):
         applications[i]["progress_percent"] = progress_to_progress_percent(applications[i])
-        applications[i]["progress"] = applications[i]["progress"].capitalize()
     return applications
 
 
@@ -30,25 +30,34 @@ def get_applications(request):
 
 def get_application(id, request):
     application = get_request(request, "applications", url_extension=str(id)+"/", data_only=True)
-    application["goods"] = getGoodsNames(application["goods"], request)
-    application["goods"] = getGoodsSelected([good["id"] for good in application["goods"]], request)
+    application["goods"] = get_goods_names(application["goods"], request)
+    return application
+
+
+def get_application_to_edit(id, request):
+    application = get_application(id, request)
+    application["goods"] = get_selected_goods([good["id"] for good in application["goods"]], request)
     return application
 
 
 @check_is_user
 def index(request):
     data = {"isAdmin" : is_admin(request), "applications": get_applications(request)}
+    msg = get_message_or_error(request)
+    if msg:
+        data.update(msg)
     if "message" in request.session:
         data["message"] = get_message(request)
     return render(request, 'index.html', data)
 
 
 @check_is_user
-def createApplication(request):
+def create_application(request):
     if request.method == "GET":
-        data = {"isAdmin" : is_admin(request), "goods" : getGoods(request)}
-        if "message" in request.session:
-            data["error"] = get_message(request)
+        data = {"isAdmin" : is_admin(request), "goods" : get_goods(request)}
+        msg = get_message_or_error(request)
+        if msg:
+            data.update(msg)
         return render(request, 'createApplication.html', data)
     elif request.method == "POST":
         data = form_body_to_json(request.body.decode('utf-8'))
@@ -62,11 +71,12 @@ def createApplication(request):
 
 
 @check_is_user
-def editApplication(request, application_id):
+def edit_application(request, application_id):
     if request.method == "GET":
-        data = {"isAdmin" : is_admin(request), "application": get_application(application_id, request)}
-        if "message" in request.session:
-            data["error"] = get_message(request)
+        data = {"isAdmin" : is_admin(request), "application": get_application_to_edit(application_id, request)}
+        msg = get_message_or_error(request)
+        if msg:
+            data.update(msg)
         return render(request, 'editApplication.html', data)
     elif request.method == "POST":
         data = form_body_to_json(request.body.decode('utf-8'))
@@ -80,22 +90,21 @@ def editApplication(request, application_id):
 
 
 @check_is_user
-def viewApplication(request, application_id):
-    return render(request, 'viewApplication.html', {"isAdmin" : is_admin(request), "application" : get_application(application_id, request)})
+def view_application(request, application_id):
+    return render(request, 'viewApplication.html', {"isAdmin": is_admin(request),
+                                                    "application": get_application(application_id, request)})
 
 
 @check_is_user
-def deleteApplication(request, application_id):
-    r = delete_request(request, "applications", url_extension=str(application_id)+"/")
+def delete_application(request, application_id):
+    delete_request(request, "applications", url_extension=str(application_id)+"/")
     request.session['message'] = "Successfully deleted an application"
     return HttpResponseRedirect('/applications/')
 
 
 @check_is_user
-def submitApplication(request, application_id):
+def submit_application(request, application_id):
     r = get_request(request, "submit", url_extension=str(application_id)+"/")
-    if r.status_code == 400:
-        request.session['message'] = "Error occurred submitting an application"
-    else:
-        request.session['message'] = "Successfully submitted an application"
+    request.session['message'] = "Error occurred submitting an application" if r.status_code == 400 \
+        else "Successfully submitted an application"
     return HttpResponseRedirect('/applications/')

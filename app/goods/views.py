@@ -5,31 +5,35 @@ from app.tools import form_body_to_json, handle_error_response, get_message
 from app.apiRequest import get_request, post_request, put_request, delete_request
 
 
-def getGoods(request):
+def get_goods(request):
     return get_request(request, "goods", data_only=True)
 
 
-def getGoodsSelected(ids, request):
-    allGoods = getGoods(request)
+def get_selected_goods(ids, request):
+    allGoods = get_goods(request)
     for i in range(0, len(allGoods)):
         allGoods[i]["selected"] = allGoods[i]["id"] in ids
     return allGoods
 
 
-def getGood(id, request):
+def get_goods_on_application():
+    return None
+
+
+def get_good(id, request):
     return get_request(request, "goods", data_only=True, url_extension=str(id)+"/")
 
 
-def getGoodsNames(ids, request):
+def get_goods_names(ids, request):
     goods = list()
     for id in ids:
-        goods.append({ "id": int(id), "name" : getGood(int(id), request)["name"]})
+        goods.append({ "id": int(id), "name" : get_good(int(id), request)["name"]})
     return goods
 
 
 @check_is_user
 def index(request):
-    data = {"isAdmin" : is_admin(request), "goods": getGoods(request)}
+    data = {"isAdmin" : is_admin(request), "goods": get_goods(request)}
     if "message" in request.session:
         data["message"] = get_message(request)
     return render(request, 'viewGoods.html', data)
@@ -56,7 +60,7 @@ def createGood(request):
 @check_is_user
 def editGood(request, good_id):
     if request.method == "GET":
-        data = {"isAdmin": is_admin(request), "good": getGood(good_id, request)}
+        data = {"isAdmin": is_admin(request), "good": get_good(good_id, request)}
         if "message" in request.session:
             data["error"] = get_message(request)
         return render(request, 'editGood.html', data)
@@ -73,7 +77,7 @@ def editGood(request, good_id):
 
 @check_is_user
 def viewGood(request, good_id):
-    return render(request, 'viewGood.html', {"isAdmin" : is_admin(request), "good": getGood(good_id, request)})
+    return render(request, 'viewGood.html', {"isAdmin" : is_admin(request), "good": get_good(good_id, request)})
 
 
 @check_is_user

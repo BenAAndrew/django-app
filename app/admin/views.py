@@ -28,7 +28,7 @@ def get_admin_application(id, request):
 
 @check_is_admin
 def index(request):
-    return render(request, 'admin.html', {"isAdmin" : is_admin(request), "applications": get_admin_applications(request)})
+    return render(request, 'admin.html', {"isAdmin": is_admin(request), "applications": get_admin_applications(request)})
 
 
 @check_is_admin
