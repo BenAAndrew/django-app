@@ -17,7 +17,6 @@ def index(request):
         data = form_body_to_json(request.body.decode('utf-8'))
         r = post_request(request, "users", data)
         if r.status_code == 200:
-            request.session['token'] = json.loads(r.content.decode('utf-8'))["token"]
             if is_admin(request):
                 response = HttpResponseRedirect('/admin/')
             else:
@@ -34,11 +33,12 @@ def create(request):
         return render(request, 'createuser.html')
     elif request.method == "POST":
         data = form_body_to_json(request.body.decode('utf-8'))
-        r = post_request(request, "create_account", data)
+        post_request(request, "create_account", data)
         request.session['message'] = "User created"
         return HttpResponseRedirect('/login/')
 
 
-def logout(request):
-    request.session['token'] = None
-    return HttpResponseRedirect('/login/')
+def logout():
+    response = HttpResponseRedirect('/login/')
+    response.set_cookie('token', None)
+    return response

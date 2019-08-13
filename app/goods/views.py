@@ -3,6 +3,7 @@ from django.shortcuts import render
 from app.userChecks import check_is_user, is_admin
 from app.tools import form_body_to_json, handle_error_response, get_message_or_error
 from app.apiRequest import get_request, post_request, put_request, delete_request
+import json
 
 
 def get_goods(request):
@@ -16,10 +17,6 @@ def get_selected_goods(ids, request):
     return allGoods
 
 
-def get_goods_on_application():
-    return None
-
-
 def get_good(id, request):
     return get_request(request, "goods", data_only=True, url_extension=str(id)+"/")
 
@@ -27,7 +24,7 @@ def get_good(id, request):
 def get_goods_names(ids, request):
     goods = list()
     for id in ids:
-        goods.append({ "id": int(id), "name" : get_good(int(id), request)["name"]})
+        goods.append({"id": int(id), "name": get_good(int(id), request)["name"]})
     return goods
 
 
@@ -41,9 +38,9 @@ def index(request):
 
 
 @check_is_user
-def createGood(request):
+def create_good(request):
     if request.method == "GET":
-        data = {"isAdmin" : is_admin(request)}
+        data = {"isAdmin": is_admin(request)}
         msg = get_message_or_error(request)
         if msg:
             data.update(msg)
@@ -60,7 +57,7 @@ def createGood(request):
 
 
 @check_is_user
-def editGood(request, good_id):
+def edit_good(request, good_id):
     if request.method == "GET":
         data = {"isAdmin": is_admin(request), "good": get_good(good_id, request)}
         msg = get_message_or_error(request)
@@ -79,12 +76,12 @@ def editGood(request, good_id):
 
 
 @check_is_user
-def viewGood(request, good_id):
-    return render(request, 'viewGood.html', {"isAdmin" : is_admin(request), "good": get_good(good_id, request)})
+def view_good(request, good_id):
+    return render(request, 'viewGood.html', {"isAdmin": is_admin(request), "good": get_good(good_id, request)})
 
 
 @check_is_user
-def deleteGood(request, good_id):
-    r = delete_request(request, "goods", url_extension=str(good_id)+"/")
+def delete_good(request, good_id):
+    delete_request(request, "goods", url_extension=str(good_id)+"/")
     request.session['message'] = "Successfully deleted a good"
     return HttpResponseRedirect('/goods/')

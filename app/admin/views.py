@@ -28,12 +28,13 @@ def get_admin_application(id, request):
 
 @check_is_admin
 def index(request):
-    return render(request, 'admin.html', {"isAdmin": is_admin(request), "applications": get_admin_applications(request)})
+    return render(request, 'admin.html', {"isAdmin": is_admin(request),
+                                          "applications": get_admin_applications(request)})
 
 
 @check_is_admin
 def review(request, application_id):
-    return render(request, 'reviewApplication.html', {"isAdmin" : is_admin(request),
+    return render(request, 'reviewApplication.html', {"isAdmin": is_admin(request),
                                                       "application": get_admin_application(application_id, request)})
 
 

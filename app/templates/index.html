@@ -15,7 +15,7 @@
                 <div class="btn-group">
                     <a href="/applications/view/{{ app.id }}/"><button id="view" type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
                     <a href="/applications/edit/{{ app.id }}/"><button id="edit" type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
-                    {% if app.progress == 'Draft' %}
+                    {% if app.progress == 'draft' %}
                       <a href="/applications/submit/{{ app.id }}/"><button id="submit" type="button" class="btn btn-sm btn-outline-secondary">Submit</button></a>
                     {% endif %}
                 </div>
