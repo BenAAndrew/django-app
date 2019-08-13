@@ -17,7 +17,7 @@ key = get_key()
 
 def decode_token(request):
     try:
-        encoded = request.session["token"]
+        encoded = request.COOKIES['token']
         return jwt.decode(encoded, key, 'RS256')
     except:
         return None
