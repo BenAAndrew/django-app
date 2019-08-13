@@ -4,7 +4,7 @@ from urllib.parse import unquote
 
 def decode(value):
     while "+" in value:
-        value = value.replace("+"," ")
+        value = value.replace("+", " ")
     return unquote(value)
 
 
@@ -16,7 +16,7 @@ def form_body_to_json(body):
         name = decode(items[0])
         value = decode(items[1])
         if "[]" in name:
-            name = name.replace("[]","")
+            name = name.replace("[]", "")
             if name not in data:
                 data[name] = list()
             data[name].append(value)
@@ -36,21 +36,15 @@ def handle_error_response(error):
     return message
 
 
-def get_message(request):
-    message = request.session["message"]
-    del request.session["message"]
-    return message
-
-
-def get_error(request):
-    error = request.session["error"]
-    del request.session["error"]
-    return error
+def get_session_variable(request, variable_name):
+    var = request.session[variable_name]
+    del request.session[variable_name]
+    return var
 
 
 def get_message_or_error(request):
     if "message" in request.session:
-        return {"message": get_message(request)}
+        return {"message": get_session_variable(request, "message")}
     elif "error" in request.session:
-        return {"error": get_error(request)}
+        return {"error": get_session_variable(request, "error")}
     return None

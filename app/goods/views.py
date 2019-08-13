@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from app.userChecks import check_is_user, is_admin
-from app.tools import form_body_to_json, handle_error_response, get_message
+from app.tools import form_body_to_json, handle_error_response, get_message_or_error
 from app.apiRequest import get_request, post_request, put_request, delete_request
 
 
@@ -34,8 +34,9 @@ def get_goods_names(ids, request):
 @check_is_user
 def index(request):
     data = {"isAdmin" : is_admin(request), "goods": get_goods(request)}
-    if "message" in request.session:
-        data["message"] = get_message(request)
+    msg = get_message_or_error(request)
+    if msg:
+        data.update(msg)
     return render(request, 'viewGoods.html', data)
 
 
@@ -43,8 +44,9 @@ def index(request):
 def createGood(request):
     if request.method == "GET":
         data = {"isAdmin" : is_admin(request)}
-        if "message" in request.session:
-            data["error"] = get_message(request)
+        msg = get_message_or_error(request)
+        if msg:
+            data.update(msg)
         return render(request, 'createGood.html', data)
     elif request.method == "POST":
         data = form_body_to_json(request.body.decode('utf-8'))
@@ -61,8 +63,9 @@ def createGood(request):
 def editGood(request, good_id):
     if request.method == "GET":
         data = {"isAdmin": is_admin(request), "good": get_good(good_id, request)}
-        if "message" in request.session:
-            data["error"] = get_message(request)
+        msg = get_message_or_error(request)
+        if msg:
+            data.update(msg)
         return render(request, 'editGood.html', data)
     elif request.method == "POST":
         data = form_body_to_json(request.body.decode('utf-8'))

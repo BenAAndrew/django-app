@@ -2,7 +2,7 @@ from django.shortcuts import render
 from app.userChecks import check_is_user, is_admin
 from django.http import HttpResponseRedirect
 from goods.views import get_goods, get_goods_names, get_selected_goods
-from app.tools import form_body_to_json, handle_error_response, get_message, get_message_or_error
+from app.tools import form_body_to_json, handle_error_response, get_message_or_error
 from app.apiRequest import get_request, post_request, put_request, delete_request
 
 
@@ -46,8 +46,6 @@ def index(request):
     msg = get_message_or_error(request)
     if msg:
         data.update(msg)
-    if "message" in request.session:
-        data["message"] = get_message(request)
     return render(request, 'index.html', data)
 
 
