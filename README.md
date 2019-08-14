@@ -5,7 +5,7 @@
 <ul>
   <li><b>App:</b>The frontend <b>Django</b> application which serves pages</li>
   <li><b>Api:</b>The backend <b>Django-rest</b> framework which processes requests and manages a database</li>
-  <li><b>pyTest:</b>Pytest frontend tests</li>c
+  <li><b>pyTest:</b>Pytest frontend tests</li>
 </ul>
 
 This sample app creates an application management system where users can create applications and attach goods, and admins can accept or decline their application requests.
@@ -33,10 +33,29 @@ This is the secret key file used for encrypting/decrpyting user tokens in the fr
 
 Step 3: Build the database by running
 ```
-cd api
+python api/manage.py migrate
+python app/manage.py migrate
 ```
 
 Step 4: Run setup either using the runserver script (./runserver) or run the following commands manually
+Option 1: Using runserver script
+```
+chmod -x runserver
+./runserver
+```
+This script also checks if any migrations have occured before running which is handy.
+
+Option 2: Manually doing what the script does
+```
+python api/manage.py runserver 0.0.0.0:8001
+```
+Then open a second terminal and execute
+```
+python app/manage.py runserver 0.0.0.0:8000
+```
+This runs the api locally on port 8001 and the app locally on port 8000.
+
+If you now navigate to localhost:8000/login you're ready to go
 
 <hr>
 <h3>App</h3>
