@@ -5,11 +5,40 @@
 <ul>
   <li><b>App:</b>The frontend <b>Django</b> application which serves pages</li>
   <li><b>Api:</b>The backend <b>Django-rest</b> framework which processes requests and manages a database</li>
-  <li><b>pyTest:</b>Pytest frontend tests</li>
+  <li><b>pyTest:</b>Pytest frontend tests</li>c
 </ul>
 
 This sample app creates an application management system where users can create applications and attach goods, and admins can accept or decline their application requests.
 
+<hr>
+<h2>Setup</h2>
+Step 1: Clone this repo and cd into the project
+
+Step 2: Create a python environment (anaconda, virtualenv etc.) and run
+```
+pip install -r requirements.txt
+```
+
+Step 3: Create a secure key file
+<ol>
+  <li>Go to https://mkjwk.org/</li>
+  <li>Set key size to 2048, key use to encryption and algorithm to RS256</li>
+  <li>Click generate</li>
+  <li>Copy everything in keypair set into a file</li>
+  <li>Remove the outer array starting with '"keys": [' so that it is now just { *content* } and no outer object</li>
+  <li>Save as key.json in the root directory of the project</li>
+</ol>
+ 
+This is the secret key file used for encrypting/decrpyting user tokens in the front and backend
+
+Step 3: Build the database by running
+```
+cd api
+```
+
+Step 4: Run setup either using the runserver script (./runserver) or run the following commands manually
+
+<hr>
 <h3>App</h3>
 Within the app folder multiple components are defined;
 <ul>
