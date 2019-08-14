@@ -38,6 +38,7 @@ python app/manage.py migrate
 ```
 
 Step 4: Run setup either using the runserver script (./runserver) or run the following commands manually
+
 Option 1: Using runserver script
 ```
 chmod -x runserver
@@ -87,7 +88,7 @@ The main folder inside this is <b>app</b> which defines the settings and root ur
   <li><b>userChecks.py (custom):</b> Handles decoding the user session cookie and checking the user can access a given page usng the check_is_user and check_is_admin annotation</li>
 </ul>
 
-Finally there are two folders; <b>templates<b> and <b>static</b>. These contain the html and css for the app and hvae been added to settings.py to be used for looking for these asset types
+Finally there are two folders; <b>templates</b> and <b>static</b>. These contain the html and css for the app and hvae been added to settings.py to be used for looking for these asset types
   
 <hr>
 <h3>Api</h3>
