@@ -44,6 +44,8 @@ chmod -x runserver
 ./runserver
 ```
 This script also checks if any migrations have occured before running which is handy.
+You can now run <b>./runserver</b> every time you want to run the project.
+You may also need to run <b>killall python</b> if you get an error saying the port is in use (means the front or backend didn't shutdown properly.
 
 Option 2: Manually doing what the script does
 ```
@@ -59,6 +61,8 @@ If you now navigate to localhost:8000/login you're ready to go
 
 <hr>
 <h3>App</h3>
+This was developed using the documentation at https://www.djangoproject.com/
+
 Within the app folder multiple components are defined;
 <ul>
   <li>admin: Manages the admin pages where all pending applications can be viewed and processed</li>
@@ -82,3 +86,67 @@ The main folder inside this is <b>app</b> which defines the settings and root ur
   <li><b>tools.py (custom):</b> Handles various tasks such as decoding form post data into a json/dict and getting messages stored in the session</li>
   <li><b>userChecks.py (custom):</b> Handles decoding the user session cookie and checking the user can access a given page usng the check_is_user and check_is_admin annotation</li>
 </ul>
+
+Finally there are two folders; <b>templates<b> and <b>static</b>. These contain the html and css for the app and hvae been added to settings.py to be used for looking for these asset types
+  
+<hr>
+<h3>Api</h3>
+This was developed using the documentation at https://www.django-rest-framework.org/
+
+Similar to the frontend app components for the api addresses are declared with the only difference being that login is called users in the backend as thios refers to thte object type it handles.
+
+These components include mostly the same files but also add some new ones;
+<ul>
+  <li><b>models.py:</b> Declares the object that we want to store (Django auto generates the SQL and handles the database interactions for us)</li>
+  <li><b>serializers.py</b> Serialises data to be saved to the db. In the case FlexSerializer is being used to simply extend the model so that the fields don't need to be redeclared</li>
+</ul>
+
+<hr>
+<h3>Explaining urls</h3>
+Urls aren't too complicated but it's useful to understand how they're built. 
+If you look at urls.py in apps you'll see lines such as 
+```
+path('applications/', include('applications.urls'))
+```
+What this means is all the urls in applications urls.py are appended onto 'applications/'. For example if there is a url in applications called 'abc/' this means the full url would be localhost:8000/applications/abc/.
+
+If you look in the urls.py in applications you'll also see
+```
+path('', views.index, name='index'),
+```
+What this means is that theres no additional path for this enpoint and so is simply reached at localhost:8000/applications/. You also see that it's poiting this request to the function index in views.py.
+
+Another important example to note is
+```
+path('edit/<int:application_id>/', views.edit_application, name='editApplication'),
+```
+The <b><int:application_id></b> in the url is converted into an integer variable called application_id. For example if the user requested localhost:8000/applications/edit/10/ it would pass 10 to the view edit_application. 
+  
+This works the same way in the backend API.
+  
+  
+<hr>
+<h3>Explaining views</h3>
+Views as discussed earlier are the functions that handle url requests.
+Within each of these functions the different request types are checked such as GET and POST.
+
+
+<h5>App</h5>
+GET's in the app generally return a page with data. These typically end with a <b>render</b> which returns a HTML page with any data that should be given to it. For example;
+```
+if request.method == "GET":
+    return render(request, 'createuser.html')
+```
+simply returns the createuser.html page when a get request is made to login/create/.
+
+A more complex example would be where data is passed to the page such as;
+```
+if request.method == "GET":
+    data = {"isAdmin": is_admin(request), "good": get_good(good_id, request)}
+    msg = get_message_or_error(request)
+    if msg:
+        data.update(msg)
+    return render(request, 'editGood.html', data)
+```
+This involves building a data dictionary which will include a message if one is found in the session (see get_message_or_error in tools.py). This dict is passed to the render and is used by the page as outlined in the editGood.html template.
+
