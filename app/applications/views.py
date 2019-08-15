@@ -42,11 +42,14 @@ def get_application_to_edit(id, request):
 
 @check_is_user
 def index(request):
-    data = {"isAdmin" : is_admin(request), "applications": get_applications(request)}
+    data = {"applications": get_applications(request)}
     msg = get_message_or_error(request)
     if msg:
         data.update(msg)
-    return render(request, 'index.html', data)
+    if is_admin(request):
+        return HttpResponseRedirect('/admin/')
+    else:
+        return render(request, 'index.html', data)
 
 
 @check_is_user

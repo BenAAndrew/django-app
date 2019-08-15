@@ -24,12 +24,12 @@ def decode_token(request):
 
 
 def redirect_to_login(request):
-    request.session['message'] = "You must login first"
+    request.session['error'] = "You must login first"
     return HttpResponseRedirect('/login/')
 
 
 def redirect_to_home(request):
-    request.session['message'] = "You do not have rights to access that page"
+    request.session['error'] = "You do not have rights to access that page"
     return HttpResponseRedirect('/applications/')
 
 
