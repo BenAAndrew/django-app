@@ -49,7 +49,7 @@ def create_good(request):
         data = form_body_to_json(request.body.decode('utf-8'))
         r = post_request(request, "goods", data)
         if r.status_code == 400:
-            request.session["message"] = handle_error_response(json.loads(r.content.decode('utf-8')))
+            request.session["error"] = handle_error_response(json.loads(r.content.decode('utf-8')))
             return HttpResponseRedirect('/goods/create/')
         else:
             request.session['message'] = "Successfully created a good"
