@@ -30,5 +30,5 @@ class TestAccessRights(Chrome):
     @login_standard_user
     def test_user_cannot_access_admin_features(self):
         self.driver.get(url+"admin/")
-        assert "You do not have rights to access that page" in self.driver.find_element_by_id("message").text
+        assert "You do not have rights to access that page" in self.driver.find_element_by_id("error").text
         assert self.driver.current_url == url + "applications/"
