@@ -17,10 +17,7 @@ def index(request):
         data = form_body_to_json(request.body.decode('utf-8'))
         r = post_request(request, "users", data)
         if r.status_code == 200:
-            if is_admin(request):
-                response = HttpResponseRedirect('/admin/')
-            else:
-                response = HttpResponseRedirect('/applications/')
+            response = HttpResponseRedirect('/applications/')
             response.set_cookie('token', json.loads(r.content.decode('utf-8'))["token"])
             return response
         else:
@@ -38,7 +35,7 @@ def create(request):
         return HttpResponseRedirect('/login/')
 
 
-def logout():
+def logout(request):
     response = HttpResponseRedirect('/login/')
     response.set_cookie('token', None)
     return response
