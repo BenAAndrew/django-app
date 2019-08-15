@@ -5,4 +5,4 @@ migrations/
 db.sqlite3
 venv/
 key.json
-testLogin.json
+pyTest/applications/testLogin.json
