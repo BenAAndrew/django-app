@@ -4,7 +4,7 @@ from login import login_standard_user
 from test_Good import create_good
 
 
-def add_application(driver, name, destination, good):
+def create_application(driver, name, destination, good):
     create_good(driver, good)
     driver.get(url + id_to_link['createApplication'])
     driver.find_element_by_name("name").send_keys(name)
@@ -16,14 +16,14 @@ def add_application(driver, name, destination, good):
 class TestApplication(Chrome):
     @login_standard_user
     def test_add_application(self):
-        add_application(self.driver, testApp["name"], randomString(10), randomString(10))
+        create_application(self.driver, testApp["name"], randomString(10), randomString(10))
         self.driver.get(url + id_to_link['home'])
         appNames = self.driver.find_elements_by_id("app_name")
         assert testApp["name"] in [name.text for name in appNames]
 
     @login_standard_user
     def test_edit_application(self):
-        add_application(self.driver, randomString(10), randomString(10), randomString(10))
+        create_application(self.driver, randomString(10), randomString(10), randomString(10))
         value = "AWholeNewValue"+randomString(10)
         self.driver.get(url+id_to_link["home"])
         self.driver.find_elements_by_id("edit")[-1].click()
@@ -36,7 +36,7 @@ class TestApplication(Chrome):
 
     @login_standard_user
     def test_view_application(self):
-        add_application(self.driver, randomString(10), randomString(10), randomString(10))
+        create_application(self.driver, randomString(10), randomString(10), randomString(10))
         self.driver.get(url + id_to_link["home"])
         appName = self.driver.find_element_by_id("app_name").text
         self.driver.find_element_by_id("view").click()
@@ -48,7 +48,7 @@ class TestApplication(Chrome):
 
     @login_standard_user
     def test_delete_application(self):
-        add_application(self.driver, randomString(10), randomString(10), randomString(10))
+        create_application(self.driver, randomString(10), randomString(10), randomString(10))
         self.driver.get(url + id_to_link["home"])
         totalApplications = len(self.driver.find_elements_by_id("app_name"))
         self.driver.find_element_by_id("edit").click()

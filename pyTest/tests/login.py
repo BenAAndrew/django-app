@@ -8,11 +8,11 @@ def get_credentials(user):
     return {"username" : credentials[user]["username"], "password" : credentials[user]["password"]}
 
 
-def login_form(self, credentials):
-    self.driver.get(url + "login/")
-    self.driver.find_element_by_name("username").send_keys(credentials["username"])
-    self.driver.find_element_by_name("password").send_keys(credentials["password"])
-    self.driver.find_element_by_id("submit").click()
+def login_form(driver, credentials):
+    driver.get(url + "login/")
+    driver.find_element_by_name("username").send_keys(credentials["username"])
+    driver.find_element_by_name("password").send_keys(credentials["password"])
+    driver.find_element_by_id("submit").click()
 
 
 def logout(self):
@@ -20,11 +20,11 @@ def logout(self):
 
 
 def loginStandardUser(self):
-    login_form(self, get_credentials("user"))
+    login_form(self.driver, get_credentials("user"))
 
 
 def loginAdminUser(self):
-    login_form(self, get_credentials("admin"))
+    login_form(self.driver, get_credentials("admin"))
 
 
 def login_standard_user(input_func):
@@ -39,6 +39,7 @@ def login_admin_user(input_func):
         loginAdminUser(*args)
         return input_func(*args, **kwargs)
     return login
+
 
 def ensure_logged_out(input_func):
     def logged_out(*args, **kwargs):
