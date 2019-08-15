@@ -60,6 +60,15 @@ This runs the api locally on port 8001 and the app locally on port 8000.
 
 If you now navigate to localhost:8000/login you're ready to go
 
+<hr>  
+<h3>Users</h3>  
+To create a basic user simply go to localhost:8000/login/create/ and enter some credentials. To create an admin user you will need to go into terminal in the project root and run;
+
+```
+python api/manage.py createsuperuser
+```
+ and follow its steps (you can ignore email as it's not used).
+
 <hr>
 <h3>App</h3>
 This was developed using the documentation at https://www.djangoproject.com/
