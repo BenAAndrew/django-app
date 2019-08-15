@@ -178,3 +178,75 @@ else:
     return HttpResponseRedirect('/goods/')
 ```
 in create_good which similarly posts form data to the backend but then will do different things depending on the status code. if it returns a 400 (error) we set a variable called error to the error message after being formatted by handle_error_response. It will then redirect back to the create page. Otherwise it was successful so sets a success message and redirects to goods homepage.
+
+<h4>Api</h4>  
+The rest-api uses more formal models for defining what is in get/post rather than if statements.
+
+<b>GET's</b> in the API simply return single or multiple JSON objects back to the app. For example;
+
+```
+def get(self, request):  
+  user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])  
+  applications = Application.objects.all().filter(user=user_id)  
+  serializer = ApplicationSerializer(applications, many=True)  
+  return JsonResponse(serializer.data, safe=False, status=200)
+```
+in applications firstly get's the user_id from their session token passed in cookies. This verifies the session and is also used in the next step where applications for this user are fetched. These are then serialised (converted to a JSON array) and returned in a JSONResponse with a success code (200). This could also be extended to handle if none are found such as 
+
+```
+try:  
+  user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])  
+  application = Application.objects.get(pk=application_id, user=user_id)  
+  serializer = ApplicationSerializer(application, many=False)  
+  return JsonResponse(serializer.data, safe=False)  
+except Application.DoesNotExist:  
+  return HttpResponse(status=404)
+```
+Which surrounds the code with a try catch and returns a 404 error in the application is not found.
+
+<b>POST's</b> in the API save an object. For example;
+
+```
+def post(self, request):  
+  data = json.loads(request.body)  
+  data["user"] = tokenHandler.get_user_id_token(request.COOKIES["token"])  
+  serializer = ApplicationSerializer(data=data)  
+  if serializer.is_valid():  
+	  serializer.save()  
+	  return JsonResponse(serializer.data, status=201)  
+  return JsonResponse(serializer.errors, status=400)
+```
+Firstly takes the JSON passed from the frontend app and turns it into a dict using json.loads. The user key is added to this by taking it from the cookies and decoding it (it's always passed encrypted!). This data is then passed to the serializer which will verify that each field is found and valid. If this is valid the object is saved to the database and a success response with the final serialised data is sent back. Otherwise the errors are sent.
+
+We also include <b>PUT's</b> which are used for updating objects. For example;
+
+```
+def put(self, request, application_id):  
+  try:  
+	  user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])  
+	  application = Application.objects.get(pk=application_id, user=user_id)  
+	  data = json.loads(request.body)  
+	  data["user"] = user_id  
+	  serializer = ApplicationSerializer(application, data=data)  
+	  if serializer.is_valid():  
+		  serializer.save()  
+		  return JsonResponse(serializer.data)  
+	  return JsonResponse(serializer.errors, status=400)  
+  except Application.DoesNotExist:  
+	  return HttpResponse(status=404)
+```
+in applications which similar to POST's starts by taking the passed data, loading it into a dict, and adding the user id to it as "user". The one key difference is that the application for the given id is found. Then when this is serialised the application object is passed and will be overwritten when saved. Errors are also handled if the serializer is invalid or the existing application is not found.
+
+The final method type is <b>DELETE</b> Which (you guessed it) will delete an object. For example;
+
+```
+def delete(self, request, application_id):  
+  try:  
+	  user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])  
+	  application = Application.objects.get(pk=application_id, user=user_id)  
+	  application.delete()  
+	  return HttpResponse(status=204)  
+  except Application.DoesNotExist:  
+	  return HttpResponse(status=404)
+```
+Will once again firstly extract the user id from the encrypted token. Will then find the application for this user with the given id (or return an error if not found). This is then deleted and a success code sent back.
