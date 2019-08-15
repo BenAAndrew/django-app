@@ -64,9 +64,11 @@ If you now navigate to localhost:8000/login you're ready to go
 <h3>Users</h3>  
 To create a basic user simply go to localhost:8000/login/create/ and enter some credentials. To create an admin user you will need to go into terminal in the project root and run;
 
+
 ```
 python api/manage.py createsuperuser
 ```
+
  and follow its steps (you can ignore email as it's not used).
 
 <hr>
@@ -259,3 +261,15 @@ def delete(self, request, application_id):
 	  return HttpResponse(status=404)
 ```
 Will once again firstly extract the user id from the encrypted token. Will then find the application for this user with the given id (or return an error if not found). This is then deleted and a success code sent back.
+
+<hr>  
+<h3>Testing</h3>  
+
+<b>Unit tests</b> for the API can be run by executing;
+
+```
+python api/manage.py test
+```
+Some example tests can be found in api/applications/tests.py.
+
+<b>End-to-end/ Frontend test</b> test the application using selenium. Can be run by starting the front and backend and ...
