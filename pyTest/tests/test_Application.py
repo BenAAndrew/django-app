@@ -1,31 +1,29 @@
-import json
-
 from chrome import *
 from setup import *
 from login import login_standard_user
-import requests
+from test_Good import create_good
 
-def addTestApplication():
-    r = requests.get(api_url + "goods/")
-    test_id = str(json.loads(r.content.decode('utf-8'))[0]["id"])
-    r = requests.post(api_url + "application/", json={"name": randomString(10), "destination": "test", "goods": [test_id]})
-    return json.loads(r.content.decode('utf-8'))["id"]
+
+def create_application(driver, name, destination, good):
+    create_good(driver, good)
+    driver.get(url + id_to_link['createApplication'])
+    driver.find_element_by_name("name").send_keys(name)
+    driver.find_element_by_name("destination").send_keys(destination)
+    driver.find_elements_by_name("goods[]")[0].click()
+    driver.find_element_by_id("submit").click()
+
 
 class TestApplication(Chrome):
     @login_standard_user
     def test_add_application(self):
-        self.driver.get(url + id_to_link["createApplication"])
-        self.driver.find_element_by_name("name").send_keys(testApp["name"])
-        self.driver.find_element_by_name("destination").send_keys(testApp["destination"])
-        goods = self.driver.find_elements_by_name("goods[]")
-        goods[0].click()
-        self.driver.find_element_by_id("submit").click()
+        create_application(self.driver, testApp["name"], randomString(10), randomString(10))
+        self.driver.get(url + id_to_link['home'])
         appNames = self.driver.find_elements_by_id("app_name")
         assert testApp["name"] in [name.text for name in appNames]
 
     @login_standard_user
     def test_edit_application(self):
-        addTestApplication()
+        create_application(self.driver, randomString(10), randomString(10), randomString(10))
         value = "AWholeNewValue"+randomString(10)
         self.driver.get(url+id_to_link["home"])
         self.driver.find_elements_by_id("edit")[-1].click()
@@ -38,6 +36,7 @@ class TestApplication(Chrome):
 
     @login_standard_user
     def test_view_application(self):
+        create_application(self.driver, randomString(10), randomString(10), randomString(10))
         self.driver.get(url + id_to_link["home"])
         appName = self.driver.find_element_by_id("app_name").text
         self.driver.find_element_by_id("view").click()
@@ -49,6 +48,7 @@ class TestApplication(Chrome):
 
     @login_standard_user
     def test_delete_application(self):
+        create_application(self.driver, randomString(10), randomString(10), randomString(10))
         self.driver.get(url + id_to_link["home"])
         totalApplications = len(self.driver.find_elements_by_id("app_name"))
         self.driver.find_element_by_id("edit").click()
