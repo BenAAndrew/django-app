@@ -106,18 +106,21 @@ These components include mostly the same files but also add some new ones;
 <h3>Explaining urls</h3>
 Urls aren't too complicated but it's useful to understand how they're built. 
 If you look at urls.py in apps you'll see lines such as 
+
 ```
 path('applications/', include('applications.urls'))
 ```
 What this means is all the urls in applications urls.py are appended onto 'applications/'. For example if there is a url in applications called 'abc/' this means the full url would be localhost:8000/applications/abc/.
 
 If you look in the urls.py in applications you'll also see
+
 ```
 path('', views.index, name='index'),
 ```
 What this means is that theres no additional path for this enpoint and so is simply reached at localhost:8000/applications/. You also see that it's poiting this request to the function index in views.py.
 
 Another important example to note is
+
 ```
 path('edit/<int:application_id>/', views.edit_application, name='editApplication'),
 ```
@@ -132,8 +135,9 @@ Views as discussed earlier are the functions that handle url requests.
 Within each of these functions the different request types are checked such as GET and POST.
 
 
-<h5>App</h5>
+<h4>App</h4>
 GET's in the app generally return a page with data. These typically end with a <b>render</b> which returns a HTML page with any data that should be given to it. For example;
+
 ```
 if request.method == "GET":
     return render(request, 'createuser.html')
@@ -141,6 +145,7 @@ if request.method == "GET":
 simply returns the createuser.html page when a get request is made to login/create/.
 
 A more complex example would be where data is passed to the page such as;
+
 ```
 if request.method == "GET":
     data = {"isAdmin": is_admin(request), "good": get_good(good_id, request)}
@@ -151,3 +156,25 @@ if request.method == "GET":
 ```
 This involves building a data dictionary which will include a message if one is found in the session (see get_message_or_error in tools.py). This dict is passed to the render and is used by the page as outlined in the editGood.html template.
 
+POST's in the app generally send data to the api to be processed and redirect the user accordingly (HttpResponseRedirect). For example;
+
+```
+data = form_body_to_json(request.body.decode('utf-8'))
+post_request(request, "create_account", data)
+request.session['message'] = "User created"
+return HttpResponseRedirect('/login/')
+```
+This firstly takes the form request data and converts to a JSON using the form_body_to_json method defined in tools.py. It then sends these to the backend using post_request defined in apiRequests.py. It then sets a session message to say the user was create successfully. Finally it redurects them to the login page.
+These can be extended to check for error such as;
+
+```
+data = form_body_to_json(request.body.decode('utf-8'))
+r = post_request(request, "goods", data)
+if r.status_code == 400:
+    request.session["error"] = handle_error_response(json.loads(r.content.decode('utf-8')))
+    return HttpResponseRedirect('/goods/create/')
+else:
+    request.session["message"] = "Successfully created a good"
+    return HttpResponseRedirect('/goods/')
+```
+in create_good which similarly posts form data to the backend but then will do different things depending on the status code. if it returns a 400 (error) we set a variable called error to the error message after being formatted by handle_error_response. It will then redirect back to the create page. Otherwise it was successful so sets a success message and redirects to goods homepage.
