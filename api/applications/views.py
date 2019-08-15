@@ -50,7 +50,7 @@ class ApplicationView(RetrieveUpdateDestroyAPIView):
             user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
             application = Application.objects.get(pk=application_id, user=user_id)
             data = json.loads(request.body)
-            data["user"] = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            data["user"] = user_id
             serializer = ApplicationSerializer(application, data=data)
             if serializer.is_valid():
                 serializer.save()
@@ -84,8 +84,8 @@ class ApplicationProgressView(RetrieveAPIView):
 
     def get(self, request, application_id, new_progress):
         try:
-            #user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
-            application = Application.objects.get(pk=application_id)
+            user_id = tokenHandler.get_user_id_token(request.COOKIES["token"])
+            application = Application.objects.get(pk=application_id, user=user_id)
             print(application.progress + " => " + new_progress)
             if self.check_progress_update(new_progress, application.progress):
                 application.progress = new_progress
