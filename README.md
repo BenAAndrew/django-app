@@ -272,4 +272,25 @@ python api/manage.py test
 ```
 Some example tests can be found in api/applications/tests.py.
 
-<b>End-to-end/ Frontend test</b> test the application using selenium. Can be run by starting the front and backend and ...
+<b>End-to-end/ Frontend test</b> test the application using selenium. These are in the pyTest folder. Before running these you need to create a file called testLogin.json in the tests folder in pyTest with the following format;
+
+```
+{
+  "user": {
+    "username": "USERNAME",
+    "password": "PASSWORD"
+  },
+  "admin": {
+    "username": "ADMIN_USERNAME",
+    "password": "ADMIN_PASSWORD"
+  }
+}
+```
+where USERNAME and PASSWORD are the credentials of a standard user and ADMIN_USERNAME and ADMIN_PASSWORD are the credentials of an admin user. The tests need these to login to the various areas covered in the tests.
+
+Once you've done this you can test by starting the front and backend and then running
+
+```
+cd pyTest/tests
+python -m pytest
+```
