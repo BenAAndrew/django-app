@@ -1,23 +1,26 @@
 from chrome import *
 from setup import *
 from login import login_standard_user
-import requests
+
+
+def create_good(driver, name):
+    driver.get(url + id_to_link["createGood"])
+    driver.find_element_by_name("name").send_keys(name)
+    driver.find_element_by_id("submit").click()
 
 
 class TestGood(Chrome):
     @login_standard_user
     def test_add_good(self):
-        for testGood in ["testGood","testGoodTwo"]:
-            self.driver.get(url + id_to_link["createGood"])
-            self.driver.find_element_by_name("name").send_keys(testGood)
-            self.driver.find_element_by_id("submit").click()
-            self.driver.get(url + id_to_link["viewGood"])
-            goodNames = self.driver.find_elements_by_id("good_name")
-            assert testGood in [name.text for name in goodNames]
+        testGood = randomString(10)
+        create_good(self.driver, testGood)
+        self.driver.get(url + id_to_link["viewGood"])
+        goodNames = self.driver.find_elements_by_id("good_name")
+        assert testGood in [name.text for name in goodNames]
 
     @login_standard_user
     def test_edit_good(self):
-        requests.post(api_url+"goods/", json={"name":randomString(10)})
+        create_good(self.driver, randomString(10))
         newVal = "abc"
         self.driver.get(url+id_to_link['viewGood'])
         self.driver.find_elements_by_id("edit")[-1].click()
@@ -30,6 +33,7 @@ class TestGood(Chrome):
 
     @login_standard_user
     def test_view_good(self):
+        create_good(self.driver, randomString(10))
         self.driver.get(url + id_to_link["viewGood"])
         goodName = self.driver.find_element_by_id("good_name").text
         self.driver.find_element_by_id("view").click()
@@ -37,7 +41,7 @@ class TestGood(Chrome):
 
     @login_standard_user
     def test_delete_good(self):
-        requests.post(api_url + "goods/", json={"name": randomString(10)})
+        create_good(self.driver, randomString(10))
         self.driver.get(url + id_to_link["viewGood"])
         totalGoods = len(self.driver.find_elements_by_id("good_name"))
         self.driver.find_element_by_id("edit").click()
