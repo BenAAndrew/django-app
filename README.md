@@ -25,7 +25,20 @@ Step 3: Create a secure key file
   <li>Set key size to 2048, key use to encryption and algorithm to RS256</li>
   <li>Click generate</li>
   <li>Copy everything in keypair set into a file</li>
-  <li>Remove the outer array starting with '"keys": [' so that it is now just { *content* } and no outer object</li>
+  <li>
+Remove the outer array starting with '"keys": [' so that it is now just 
+	  
+```
+{
+  "kty": ___,
+  "d": ___,
+  "e": ___,
+  "use": "enc",
+  "alg": "RS256",
+  "n": ___
+}
+```
+with only one pair of { }</li>
   <li>Save as key.json in the root directory of the project</li>
 </ol>
  
