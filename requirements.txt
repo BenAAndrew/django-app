@@ -37,7 +37,7 @@ pytest==5.0.1
 pytest-html==1.21.1
 pytest-metadata==1.8.0
 pytz==2019.1
-PyYAML==5.1.2
+PyYAML==5.4
 requests==2.22.0
 ruamel.yaml==0.16.0
 ruamel.yaml.clib==0.1.0
